@@ -6,10 +6,11 @@ tablet and desktop. All progress is saved privately in your browser.
 
 ## Features
 
-- **Today** — see the day's session, your streak, weekly progress and totals.
-- **Program** — a 4-day Upper/Lower split (Mon, Tue, Thu, Fri) with form cues for every exercise.
+- **Today** — a hero dashboard with the day's session, a weekly progress ring, streak and totals.
+- **Program** — a 4-day Upper/Lower split (Mon, Tue, Thu, Fri) with form cues and warm-ups for every exercise.
 - **Logging** — tick off exercises and record reps/weight per set; a finish button marks the session done.
 - **Progress** — sessions-per-week chart, bodyweight tracking, lifetime volume.
+- **Nutrition** — personalized daily calorie and protein/carb/fat targets computed from your stats (editable profile), with BMI and protein-source examples.
 - **Tips** — the core principles that drive most of your results.
 
 No accounts, no servers, no tracking. Custom inline SVG icons, no emojis.
