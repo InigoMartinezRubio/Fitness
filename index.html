@@ -15,22 +15,28 @@
 <body>
 
 <div class="app-header">
-  <div class="tag">Personalized plan &middot; 28 yrs &middot; 179 cm &middot; 58 kg</div>
+  <div class="header-top">
+    <div class="tag" id="tag"></div>
+    <div class="lang-switch">
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-lang="es" onclick="setLang('es')">ES</button>
+    </div>
+  </div>
   <div class="header-row">
     <h1 class="logo">MUSCLE<br><span>PROTOCOL</span></h1>
     <div class="header-streak" id="hdr-streak">
       <div class="streak-fire-hdr" id="hdr-fire"></div>
       <div class="streak-num-hdr" id="hdr-streak-num">0</div>
-      <div class="streak-lbl-hdr">sessions<br>in a row</div>
+      <div class="streak-lbl-hdr" id="streak-lbl" data-i18n-html="streakLbl"></div>
     </div>
   </div>
 </div>
 
 <div class="stats-bar">
-  <div class="stat"><div class="stat-value" id="s-total">0</div><div class="stat-label">Total workouts</div></div>
-  <div class="stat"><div class="stat-value" id="s-week">0/4</div><div class="stat-label">This week</div></div>
-  <div class="stat"><div class="stat-value" id="s-best">0</div><div class="stat-label">Best streak</div></div>
-  <div class="stat"><div class="stat-value" id="s-consist">&mdash;</div><div class="stat-label">Consistency</div></div>
+  <div class="stat"><div class="stat-value" id="s-total">0</div><div class="stat-label" data-i18n="stTotal">Total workouts</div></div>
+  <div class="stat"><div class="stat-value" id="s-week">0/4</div><div class="stat-label" data-i18n="stWeek">This week</div></div>
+  <div class="stat"><div class="stat-value" id="s-best">0</div><div class="stat-label" data-i18n="stBest">Best streak</div></div>
+  <div class="stat"><div class="stat-value" id="s-consist">&mdash;</div><div class="stat-label" data-i18n="stConsist">Consistency</div></div>
 </div>
 
 <div class="nav-tabs" id="nav-tabs"></div>
@@ -53,16 +59,16 @@
         <div class="streak-hero">
           <span class="sh-fire" id="sh-fire"></span>
           <span class="sh-num" id="sh-num">0</span>
-          <div class="sh-lbl">Current streak</div>
-          <div class="sh-sub" id="sh-sub">Log your first workout</div>
+          <div class="sh-lbl" data-i18n="curStreak">Current streak</div>
+          <div class="sh-sub" id="sh-sub"></div>
         </div>
         <div class="mini-stats">
-          <div class="ms"><div class="ms-val" id="ms-week">0/4</div><div class="ms-lbl">This week</div></div>
-          <div class="ms"><div class="ms-val" id="ms-best">0</div><div class="ms-lbl">Best streak</div></div>
-          <div class="ms"><div class="ms-val" id="ms-total">0</div><div class="ms-lbl">Total</div></div>
+          <div class="ms"><div class="ms-val" id="ms-week">0/4</div><div class="ms-lbl" data-i18n="msWeek">This week</div></div>
+          <div class="ms"><div class="ms-val" id="ms-best">0</div><div class="ms-lbl" data-i18n="msBest">Best streak</div></div>
+          <div class="ms"><div class="ms-val" id="ms-total">0</div><div class="ms-lbl" data-i18n="msTotal">Total</div></div>
         </div>
         <button class="log-today-btn" id="log-today-btn" onclick="openPanel(null)"></button>
-        <div class="recent-hdr">Recent sessions</div>
+        <div class="recent-hdr" data-i18n="recent">Recent sessions</div>
         <div class="recent-list" id="recent-list">
           <div class="empty-note">No sessions logged yet</div>
         </div>
@@ -73,8 +79,8 @@
   <!-- ROUTINE -->
   <div id="view-routine" class="view">
     <div class="sub-tabs">
-      <button class="sub-tab active" onclick="showSub('week',this)">Weekly plan</button>
-      <button class="sub-tab" onclick="showSub('principles',this)">Principles</button>
+      <button class="sub-tab active" onclick="showSub('week',this)" data-i18n="subWeekly">Weekly plan</button>
+      <button class="sub-tab" onclick="showSub('principles',this)" data-i18n="subPrinciples">Principles</button>
     </div>
     <div id="sub-week"><div class="days-grid" id="days-grid"></div></div>
     <div id="sub-principles" style="display:none">
@@ -84,7 +90,7 @@
 
   <!-- NUTRITION -->
   <div id="view-nutrition" class="view">
-    <div class="sec-hdr">Macros &amp; fuel</div>
+    <div class="sec-hdr" data-i18n="secNutrition">Macros &amp; fuel</div>
     <div class="nut-grid" id="nut-grid"></div>
     <div class="info-box" id="nut-info" style="margin-top:8px"></div>
     <div class="disclaimer" id="nut-disc"></div>
@@ -92,10 +98,10 @@
 
   <!-- PROGRESSION -->
   <div id="view-progression" class="view">
-    <div class="sec-hdr">12-week plan</div>
+    <div class="sec-hdr" data-i18n="sec12">12-week plan</div>
     <div class="prog-phases" id="prog-phases"></div>
     <div class="pr-section">
-      <div class="sec-hdr" style="margin-top:24px">Weight progression</div>
+      <div class="sec-hdr" style="margin-top:24px" data-i18n="secWeightProg">Weight progression</div>
       <div class="pr-lift-tabs" id="pr-lift-tabs"></div>
       <div class="pr-chart" id="pr-chart"></div>
     </div>
@@ -103,7 +109,7 @@
 
   <!-- EXERCISES -->
   <div id="view-exercises" class="view">
-    <div class="guide-intro">Tap any exercise for a step-by-step guide using your 5&nbsp;kg and 8&nbsp;kg dumbbells.</div>
+    <div class="guide-intro" data-i18n-html="guideIntro">Tap any exercise for a step-by-step guide using your 5&nbsp;kg and 8&nbsp;kg dumbbells.</div>
     <div id="ex-guide"></div>
   </div>
 
@@ -115,12 +121,12 @@
     <button class="pclose" onclick="closePanel()">&times;</button>
     <div class="panel-title" id="panel-title">LOG</div>
     <div class="panel-date" id="panel-date"></div>
-    <label class="flbl">Workout</label>
+    <label class="flbl" data-i18n="fldWorkout">Workout</label>
     <div class="type-grid" id="type-grid"></div>
     <div id="lifts-container"></div>
-    <label class="flbl" style="margin-top:4px">Session notes</label>
-    <textarea class="notes-input" id="log-notes" placeholder="How did it feel? Any progress? General sensations..."></textarea>
-    <button class="save-btn" id="save-btn" onclick="saveLog()">Save session</button>
+    <label class="flbl" style="margin-top:4px" data-i18n="fldNotes">Session notes</label>
+    <textarea class="notes-input" id="log-notes" data-i18n-ph="notesPh" placeholder="How did it feel? Any progress? General sensations..."></textarea>
+    <button class="save-btn" id="save-btn" onclick="saveLog()" data-i18n="save">Save session</button>
     <button class="del-btn" id="del-btn" onclick="deleteLog()">Delete entry</button>
   </div>
 </div>

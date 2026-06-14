@@ -5,6 +5,12 @@ program built around **2×5kg + 2×8kg dumbbells** plus bodyweight. Dark, square
 high-contrast design (Bebas Neue + DM Sans). All progress is saved privately in
 your browser. No accounts, no servers, no emojis — clean line icons throughout.
 
+## Languages
+
+Use the **EN / ES** switch in the top-right to flip the entire app between English
+and Spanish — every label, workout, exercise tutorial and nutrition string is
+translated. Your choice is remembered on the device.
+
 ## Tabs
 
 - **Tracker** — a color-coded calendar of your training, current/best streak,
