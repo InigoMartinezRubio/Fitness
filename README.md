@@ -1,47 +1,57 @@
-# FORGE — Personal Training Tracker
+# FORGE — Muscle Protocol
 
-A clean, mobile-friendly web app to run and track a beginner muscle-building
-program built around **2×5kg + 2×8kg dumbbells** plus bodyweight. Works on phone,
-tablet and desktop. All progress is saved privately in your browser.
+A bold, mobile-friendly web app to run and track a beginner muscle-building
+program built around **2×5kg + 2×8kg dumbbells** plus bodyweight. Dark, squared,
+high-contrast design (Bebas Neue + DM Sans). All progress is saved privately in
+your browser. No accounts, no servers, no emojis — clean line icons throughout.
 
-## Features
+## Tabs
 
-- **Today** — a hero dashboard with the day's session, a weekly progress ring, streak and totals.
-- **Program** — a 4-day Upper/Lower split (Mon, Tue, Thu, Fri) with form cues and warm-ups for every exercise.
-- **Logging** — tick off exercises and record reps/weight per set; a finish button marks the session done.
-- **Progress** — sessions-per-week chart, bodyweight tracking, lifetime volume.
-- **Nutrition** — personalized daily calorie and protein/carb/fat targets computed from your stats (editable profile), with BMI and protein-source examples.
-- **Tips** — the core principles that drive most of your results.
+- **Tracker** — a color-coded calendar of your training, current/best streak,
+  this-week count, total workouts and consistency. Tap any past day (or "Log
+  today's workout") to open the logging panel.
+- **Routine** — the 4-day Upper/Lower split (Mon Upper A, Tue Lower A, Thu Upper B,
+  Fri Lower B; Wed/Sat/Sun rest) as expandable cards with warm-ups, form cues and
+  every exercise's sets/reps/rest. A "Principles" sub-tab covers the essentials.
+- **Nutrition** — personalized daily calorie and protein/carb/fat targets computed
+  from your stats (editable), with BMI, protein/carb sources and a note for lean
+  lifters.
+- **Progression** — a 12-week plan plus a weight-progression bar chart for your key
+  lifts and bodyweight, drawn from what you log.
 
-No accounts, no servers, no tracking. Custom inline SVG icons, no emojis.
+## Logging
+
+Open the panel from the calendar or the routine. Pick the workout (Upper A, Lower A,
+Upper B, Lower B or Rest); the matching dumbbell exercises appear with kg + reps
+fields. Add a note, save. Edit or delete any day by tapping it on the calendar.
 
 ## Run locally
 
-Just open `index.html` in a browser. (Charts and fonts load from a CDN, so keep an internet connection for those.)
+Open `index.html` in a browser. (Fonts load from Google Fonts, so keep a connection
+for the exact typeface.)
 
 ## Deploy to GitHub Pages
 
-1. Create a new repository on GitHub (e.g. `fitness`).
-2. Upload `index.html`, `styles.css`, `app.js` and this `README.md` to the repo
-   (drag-and-drop in the GitHub web UI, or `git push`).
-3. In the repo go to **Settings → Pages**.
-4. Under **Build and deployment → Source**, choose **Deploy from a branch**.
-5. Select branch **main** and folder **/ (root)**, then **Save**.
-6. Wait ~1 minute. Your app will be live at
-   `https://<your-username>.github.io/<repo-name>/`.
+1. Create a new GitHub repository.
+2. Upload `index.html`, `styles.css`, `app.js` and this `README.md`.
+3. Repo **Settings → Pages → Build and deployment → Source → Deploy from a branch**.
+4. Pick branch **main**, folder **/ (root)**, **Save**.
+5. After ~1 minute it's live at `https://<your-username>.github.io/<repo-name>/`.
 
-### Tip: add it to your phone home screen
-Open the live URL in your phone browser, then "Add to Home Screen". It opens
-full-screen like a native app.
+On your phone, open the URL and use "Add to Home Screen" for a full-screen app.
 
 ## Your data
 
-Progress lives in your browser's local storage on each device. Clearing browser
-data, or using a different device/browser, starts fresh. Use **Progress → Reset
-all progress** to wipe it deliberately.
+Progress lives in your browser's local storage per device. Clearing browser data, or
+switching device/browser, starts fresh.
 
-## Customising the program
+## Customising
 
-Open `app.js` and edit the `PROGRAM` object near the top — change exercises,
-sets, reps, loads or the weekly `schedule`. Edit the `TIPS` array to change the
-tips page. No build step required.
+Edit the data objects near the top of `app.js`: `WORKOUTS` (exercises, sets, reps,
+cues), `SCHEDULE` (weekly layout), `PHASES`, `PRINCIPLES`. Colors live in `:root`
+inside `styles.css`. No build step.
+
+## Note
+
+The program and nutrition figures are general fitness guidance, not medical advice.
+If your low weight is unintentional, consider speaking with a doctor or dietitian.

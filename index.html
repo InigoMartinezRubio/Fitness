@@ -1,43 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#07090f">
-  <meta name="description" content="FORGE — a personal dumbbell training tracker. Beginner 4-day muscle-building program.">
-  <title>FORGE — Training Tracker</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d6ff3d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m6.5 6.5 11 11'/><path d='m21 21-1-1'/><path d='m3 3 1 1'/><path d='m18 22 4-4'/><path d='m2 6 4-4'/><path d='m3 10 7-7'/><path d='m14 21 7-7'/></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0d0d0f">
+<meta name="description" content="FORGE — dumbbell muscle-building tracker. 4-day program for 2x5kg + 2x8kg dumbbells.">
+<title>FORGE — Muscle Protocol</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e8ff47' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6.5 6.5 11 11'/%3E%3Cpath d='m21 21-1-1'/%3E%3Cpath d='m3 3 1 1'/%3E%3Cpath d='m18 22 4-4'/%3E%3Cpath d='m2 6 4-4'/%3E%3Cpath d='m3 10 7-7'/%3E%3Cpath d='m14 21 7-7'/%3E%3C/svg%3E">
 </head>
 <body>
-  <div class="app-shell">
-    <!-- Sidebar (desktop) -->
-    <aside class="sidebar">
-      <div class="brand">
-        <span class="brand__mark">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6.5 6.5 11 11"/><path d="m21 21-1-1"/><path d="m3 3 1 1"/><path d="m18 22 4-4"/><path d="m2 6 4-4"/><path d="m3 10 7-7"/><path d="m14 21 7-7"/></svg>
-        </span>
-        <span class="brand__name">FORGE</span>
-      </div>
-      <nav class="nav nav--side" data-nav></nav>
-      <div class="sidebar__foot">
-        <p>Equipment<br><b>2×5kg &amp; 2×8kg dumbbells</b></p>
-      </div>
-    </aside>
 
-    <!-- Main -->
-    <main class="main">
-      <div id="view" class="view"></div>
-    </main>
+<div class="app-header">
+  <div class="tag">Personalized plan &middot; 28 yrs &middot; 179 cm &middot; 58 kg</div>
+  <div class="header-row">
+    <h1 class="logo">MUSCLE<br><span>PROTOCOL</span></h1>
+    <div class="header-streak" id="hdr-streak">
+      <div class="streak-fire-hdr" id="hdr-fire"></div>
+      <div class="streak-num-hdr" id="hdr-streak-num">0</div>
+      <div class="streak-lbl-hdr">sessions<br>in a row</div>
+    </div>
+  </div>
+</div>
 
-    <!-- Bottom nav (mobile) -->
-    <nav class="nav nav--bottom" data-nav></nav>
+<div class="stats-bar">
+  <div class="stat"><div class="stat-value" id="s-total">0</div><div class="stat-label">Total workouts</div></div>
+  <div class="stat"><div class="stat-value" id="s-week">0/4</div><div class="stat-label">This week</div></div>
+  <div class="stat"><div class="stat-value" id="s-best">0</div><div class="stat-label">Best streak</div></div>
+  <div class="stat"><div class="stat-value" id="s-consist">&mdash;</div><div class="stat-label">Consistency</div></div>
+</div>
+
+<div class="nav-tabs" id="nav-tabs"></div>
+
+<div class="main-content">
+
+  <!-- TRACKER -->
+  <div id="view-tracker" class="view active">
+    <div class="tracker-layout">
+      <div class="cal-card">
+        <div class="cal-nav">
+          <button class="cal-nav-btn" onclick="changeMonth(-1)">&lsaquo;</button>
+          <div class="cal-month-lbl" id="cal-lbl"></div>
+          <button class="cal-nav-btn" onclick="changeMonth(1)">&rsaquo;</button>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+        <div class="cal-legend" id="cal-legend"></div>
+      </div>
+      <div class="tracker-side">
+        <div class="streak-hero">
+          <span class="sh-fire" id="sh-fire"></span>
+          <span class="sh-num" id="sh-num">0</span>
+          <div class="sh-lbl">Current streak</div>
+          <div class="sh-sub" id="sh-sub">Log your first workout</div>
+        </div>
+        <div class="mini-stats">
+          <div class="ms"><div class="ms-val" id="ms-week">0/4</div><div class="ms-lbl">This week</div></div>
+          <div class="ms"><div class="ms-val" id="ms-best">0</div><div class="ms-lbl">Best streak</div></div>
+          <div class="ms"><div class="ms-val" id="ms-total">0</div><div class="ms-lbl">Total</div></div>
+        </div>
+        <button class="log-today-btn" id="log-today-btn" onclick="openPanel(null)"></button>
+        <div class="recent-hdr">Recent sessions</div>
+        <div class="recent-list" id="recent-list">
+          <div class="empty-note">No sessions logged yet</div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <script src="app.js"></script>
+  <!-- ROUTINE -->
+  <div id="view-routine" class="view">
+    <div class="sub-tabs">
+      <button class="sub-tab active" onclick="showSub('week',this)">Weekly plan</button>
+      <button class="sub-tab" onclick="showSub('principles',this)">Principles</button>
+    </div>
+    <div id="sub-week"><div class="days-grid" id="days-grid"></div></div>
+    <div id="sub-principles" style="display:none">
+      <div class="principles-grid" id="principles-grid"></div>
+    </div>
+  </div>
+
+  <!-- NUTRITION -->
+  <div id="view-nutrition" class="view">
+    <div class="sec-hdr">Macros &amp; fuel</div>
+    <div class="nut-grid" id="nut-grid"></div>
+    <div class="info-box" id="nut-info" style="margin-top:8px"></div>
+    <div class="disclaimer" id="nut-disc"></div>
+  </div>
+
+  <!-- PROGRESSION -->
+  <div id="view-progression" class="view">
+    <div class="sec-hdr">12-week plan</div>
+    <div class="prog-phases" id="prog-phases"></div>
+    <div class="pr-section">
+      <div class="sec-hdr" style="margin-top:24px">Weight progression</div>
+      <div class="pr-lift-tabs" id="pr-lift-tabs"></div>
+      <div class="pr-chart" id="pr-chart"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- LOG PANEL -->
+<div class="overlay" id="overlay" onclick="handleOverlay(event)">
+  <div class="log-panel">
+    <button class="pclose" onclick="closePanel()">&times;</button>
+    <div class="panel-title" id="panel-title">LOG</div>
+    <div class="panel-date" id="panel-date"></div>
+    <label class="flbl">Workout</label>
+    <div class="type-grid" id="type-grid"></div>
+    <div id="lifts-container"></div>
+    <label class="flbl" style="margin-top:4px">Session notes</label>
+    <textarea class="notes-input" id="log-notes" placeholder="How did it feel? Any progress? General sensations..."></textarea>
+    <button class="save-btn" id="save-btn" onclick="saveLog()">Save session</button>
+    <button class="del-btn" id="del-btn" onclick="deleteLog()">Delete entry</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
 </body>
 </html>
