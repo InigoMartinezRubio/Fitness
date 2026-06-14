@@ -18,6 +18,9 @@ your browser. No accounts, no servers, no emojis — clean line icons throughout
   lifters.
 - **Progression** — a 12-week plan plus a weight-progression bar chart for your key
   lifts and bodyweight, drawn from what you log.
+- **Exercises** — a library of every move in the program, grouped by Push / Pull /
+  Legs / Core. Tap any exercise to expand a step-by-step how-to written for your
+  5kg and 8kg dumbbells, with a key coaching cue.
 
 ## Logging
 

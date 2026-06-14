@@ -25,6 +25,7 @@ const IC = {
   clock: svg('<circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/>'),
   bed: svg('<path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/>'),
   leaf: svg('<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6"/>'),
+  book: svg('<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>'),
 };
 
 /* ---------------------------------------------------------------------------
@@ -129,6 +130,158 @@ const PHASES = [
   { wk: "Weeks 10–12", t: "PEAK", d: "Week 10 easy (deload). Weeks 11–12 push for max reps; consider heavier dumbbells." },
 ];
 
+/* ---------------------------------------------------------------------------
+   EXERCISE LIBRARY — how to do each move with your dumbbells
+   --------------------------------------------------------------------------- */
+const EXERCISES = [
+  { group: "Push", cls: "g-push", items: [
+    { n: "Dumbbell Floor Press", equip: "8 kg ×2", target: "Chest · Triceps · Front delts",
+      steps: ["Lie on your back on the floor, knees bent, a dumbbell in each hand at chest level with your elbows resting on the floor.",
+        "Press both dumbbells straight up until your arms are fully extended over your chest.",
+        "Lower slowly (2–3 seconds) until your upper arms lightly touch the floor.",
+        "Pause for a moment, then press up again."],
+      tip: "The floor stops your elbows, which protects your shoulders — ideal for pressing safely at home." },
+    { n: "Seated Shoulder Press", equip: "8 kg ×2", target: "Shoulders · Triceps",
+      steps: ["Sit tall on a chair, a dumbbell in each hand at shoulder height, palms facing forward.",
+        "Brace your core so your lower back doesn't arch.",
+        "Press the dumbbells overhead until your arms are straight.",
+        "Lower under control back to shoulder height."],
+      tip: "If 8 kg gives out mid-set, swap to the 5 kg pair and finish your reps." },
+    { n: "Lateral Raise", equip: "5 kg ×2", target: "Side delts (shoulder width)",
+      steps: ["Stand with a dumbbell in each hand at your sides, a slight bend in the elbows.",
+        "Raise both arms out to the sides, leading with the elbows, up to shoulder height.",
+        "Pause for a second at the top.",
+        "Lower slowly back down."],
+      tip: "Keep it strict — no swinging. Light weight and high reps build the side delts." },
+    { n: "Incline Push-up", equip: "Bodyweight + raised surface", target: "Chest · Triceps · Shoulders",
+      steps: ["Place your hands wider than your shoulders on a sturdy raised surface (table, sofa, counter).",
+        "Walk your feet back into a straight plank line.",
+        "Lower your chest to the edge under control.",
+        "Push back up to the start."],
+      tip: "The higher the surface, the easier. Lower it over time to work toward floor push-ups." },
+    { n: "Pike Push-up", equip: "Bodyweight", target: "Shoulders · Triceps",
+      steps: ["Start in a push-up, then walk your feet in and lift your hips into an inverted 'V'.",
+        "Keep your head between your arms.",
+        "Bend your elbows to lower the crown of your head toward the floor.",
+        "Press back up."],
+      tip: "The more vertical your torso, the more this hits the shoulders." },
+    { n: "Overhead Triceps Extension", equip: "8 kg ×1", target: "Triceps",
+      steps: ["Hold one dumbbell with both hands and raise it overhead.",
+        "Keep your elbows pointing forward, close to your head.",
+        "Lower the dumbbell behind your head by bending only at the elbows.",
+        "Extend back up to the top."],
+      tip: "Only your forearms move — keep the upper arms still." },
+  ]},
+  { group: "Pull", cls: "g-pull", items: [
+    { n: "Bent-over Row", equip: "8 kg ×2", target: "Upper back · Lats · Biceps",
+      steps: ["Hold a dumbbell in each hand, hinge at the hips to about 45°, flat back, knees soft.",
+        "Let your arms hang straight down.",
+        "Pull both dumbbells to your waist, driving the elbows back.",
+        "Squeeze the shoulder blades, then lower slowly."],
+      tip: "Keep your back flat and chest proud — never round your spine." },
+    { n: "Single-arm Row", equip: "8 kg ×1", target: "Lats · Upper back",
+      steps: ["Brace one hand and knee on a chair, back flat and roughly parallel to the floor.",
+        "Hold a dumbbell in the other hand, hanging straight down.",
+        "Row it up to your hip, keeping the elbow close to your body.",
+        "Lower with control to a full stretch."],
+      tip: "Working one side at a time lets you use a bigger range of motion." },
+    { n: "Rear Delt Fly", equip: "5 kg ×2", target: "Rear delts · Upper back",
+      steps: ["Hinge forward at the hips, flat back, dumbbells hanging below your chest.",
+        "With soft elbows, raise both arms out to the sides.",
+        "Squeeze the rear shoulders at the top.",
+        "Lower slowly."],
+      tip: "Light weight only — think 'spread your wings'." },
+    { n: "Dumbbell Curl", equip: "8 kg ×2", target: "Biceps",
+      steps: ["Stand with a dumbbell in each hand, palms facing forward.",
+        "Keep your elbows pinned to your sides.",
+        "Curl the dumbbells up, squeezing the biceps.",
+        "Lower slowly over 2–3 seconds."],
+      tip: "No swinging or leaning back — let the biceps do the work." },
+    { n: "Hammer Curl", equip: "8 kg ×2", target: "Biceps · Brachialis · Forearms",
+      steps: ["Hold the dumbbells with palms facing each other (neutral grip).",
+        "Keep your elbows tight to your sides.",
+        "Curl up while keeping the neutral grip.",
+        "Lower under control."],
+      tip: "Builds arm thickness and forearm strength." },
+    { n: "Dumbbell Shrug", equip: "8 kg ×2", target: "Upper traps",
+      steps: ["Stand tall, a dumbbell in each hand at your sides.",
+        "Lift your shoulders straight up toward your ears.",
+        "Pause and squeeze at the top.",
+        "Lower slowly."],
+      tip: "Straight up and down — don't roll the shoulders." },
+  ]},
+  { group: "Legs", cls: "g-legs", items: [
+    { n: "Goblet Squat", equip: "8 kg ×1", target: "Quads · Glutes",
+      steps: ["Hold one dumbbell vertically against your chest with both hands.",
+        "Stand with feet shoulder-width, toes slightly out.",
+        "Sit down between your knees, chest tall, until your thighs are about parallel.",
+        "Drive through your heels to stand back up."],
+      tip: "Holding the weight at your chest keeps you upright and protects your back." },
+    { n: "Romanian Deadlift", equip: "8 kg ×2", target: "Hamstrings · Glutes",
+      steps: ["Hold a dumbbell in each hand in front of your thighs, knees slightly bent.",
+        "Push your hips back, sliding the dumbbells down your legs.",
+        "Go until you feel a stretch in the hamstrings, keeping your back flat.",
+        "Drive your hips forward to stand."],
+      tip: "It's a hip hinge, not a squat — you should feel it in the hamstrings." },
+    { n: "Reverse Lunge", equip: "8 kg ×2", target: "Quads · Glutes",
+      steps: ["Stand tall with a dumbbell in each hand.",
+        "Step one foot back and lower until both knees are about 90°.",
+        "Keep the front shin vertical.",
+        "Push through the front heel to return to standing."],
+      tip: "Stepping back is easier on the knees than stepping forward." },
+    { n: "Bulgarian Split Squat", equip: "8 kg ×2", target: "Quads · Glutes (single leg)",
+      steps: ["Stand a stride in front of a chair and rest the top of your rear foot on it.",
+        "Hold a dumbbell in each hand.",
+        "Drop straight down through the front leg until the thigh is about parallel.",
+        "Drive up through the front heel."],
+      tip: "The best leg builder you can do with light weights — keep your torso tall." },
+    { n: "Sumo Squat", equip: "8 kg ×1", target: "Inner thighs · Glutes · Quads",
+      steps: ["Stand with a wide stance, toes turned out.",
+        "Hold one dumbbell hanging between your legs.",
+        "Squat straight down, knees tracking over your toes.",
+        "Stand and squeeze the glutes."],
+      tip: "The wide stance targets the inner thighs and glutes." },
+    { n: "Single-leg RDL", equip: "5 kg ×2", target: "Hamstrings · Glutes · Balance",
+      steps: ["Hold the dumbbells and stand on one leg with a soft knee.",
+        "Hinge at the hip, reaching the dumbbells toward the floor as your back leg lifts behind you.",
+        "Keep your back flat and hips level.",
+        "Return to standing."],
+      tip: "Go slow — the balance challenge is part of the exercise." },
+    { n: "Walking / Static Lunge", equip: "8 kg ×2", target: "Quads · Glutes",
+      steps: ["Hold a dumbbell in each hand.",
+        "Take a long step forward and lower until both knees are about 90°.",
+        "Either step through into the next lunge (walking) or push back to the start (static).",
+        "Keep your torso upright throughout."],
+      tip: "Control the descent — don't let the back knee slam down." },
+    { n: "Glute Bridge", equip: "8 kg ×1", target: "Glutes",
+      steps: ["Lie on your back, knees bent, feet flat on the floor.",
+        "Rest one dumbbell across your hips, holding it in place.",
+        "Drive through your heels and lift your hips until your body is in a straight line.",
+        "Squeeze the glutes hard for a second, then lower."],
+      tip: "Push your knees out slightly and squeeze hard at the top." },
+    { n: "Standing Calf Raise", equip: "8 kg ×2", target: "Calves",
+      steps: ["Stand tall with a dumbbell in each hand.",
+        "Rise up onto the balls of your feet as high as you can.",
+        "Pause at the top.",
+        "Lower slowly for a full stretch."],
+      tip: "Do it on the edge of a step for more range of motion." },
+    { n: "Seated Calf Raise", equip: "8 kg ×2", target: "Calves (soleus)",
+      steps: ["Sit on a chair, feet flat, balls of your feet on the floor or a thick book.",
+        "Rest the dumbbells on top of your knees.",
+        "Raise your heels as high as possible.",
+        "Lower slowly."],
+      tip: "The seated version hits the deeper soleus muscle." },
+  ]},
+  { group: "Core", cls: "g-core", items: [
+    { n: "Plank", equip: "Bodyweight", target: "Core",
+      steps: ["Rest on your forearms and toes, elbows directly under your shoulders.",
+        "Make a straight line from your head to your heels.",
+        "Brace your abs and squeeze your glutes.",
+        "Hold for the target time, breathing steadily."],
+      tip: "Don't let your hips sag or pike up — add a few seconds each week." },
+  ]},
+];
+
 /* =========================================================================
    STATE
    ========================================================================= */
@@ -220,6 +373,7 @@ const TABS = [
   { id: "routine", label: "Routine", ic: IC.dumbbell },
   { id: "nutrition", label: "Nutrition", ic: IC.nutrition },
   { id: "progression", label: "Progression", ic: IC.chart },
+  { id: "exercises", label: "Exercises", ic: IC.book },
 ];
 function buildNav() {
   document.getElementById("nav-tabs").innerHTML = TABS.map((t,i) =>
@@ -469,6 +623,29 @@ function showSub(name, btn) {
   btn.classList.add("active");
 }
 
+function buildExercises() {
+  const el = document.getElementById("ex-guide");
+  if (!el) return;
+  el.innerHTML = EXERCISES.map(grp => {
+    const cards = grp.items.map(ex => `<div class="day-card guide-card">
+      <div class="day-hdr" onclick="this.parentElement.classList.toggle('active')">
+        <div class="day-info">
+          <div class="day-dname">${grp.group} · ${ex.target}</div>
+          <div class="day-title gtitle">${ex.n}</div>
+        </div>
+        <div class="dbadge ${grp.cls}">${ex.equip}</div>
+        <div class="day-chev">&#9662;</div>
+      </div>
+      <div class="day-body">
+        <div class="guide-equip">${IC.dumbbell} Equipment — ${ex.equip}</div>
+        <ol class="guide-steps">${ex.steps.map(s => `<li>${s}</li>`).join("")}</ol>
+        <div class="tip"><div class="tip-t">${IC.bulb} Key cue</div><div class="tip-tx">${ex.tip}</div></div>
+      </div>
+    </div>`).join("");
+    return `<div class="sec-hdr" style="margin-top:8px">${grp.group}</div><div class="days-grid" style="margin-bottom:18px">${cards}</div>`;
+  }).join("");
+}
+
 /* =========================================================================
    NUTRITION VIEW
    ========================================================================= */
@@ -615,4 +792,5 @@ window.showPR = showPR;
 buildNav();
 buildRoutine();
 buildProgression();
+buildExercises();
 refresh();
