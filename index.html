@@ -1,138 +1,982 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0d0d0f">
-<meta name="description" content="FORGE — dumbbell muscle-building tracker. 4-day program for 2x5kg + 2x8kg dumbbells.">
-<title>FORGE — Muscle Protocol</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e8ff47' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6.5 6.5 11 11'/%3E%3Cpath d='m21 21-1-1'/%3E%3Cpath d='m3 3 1 1'/%3E%3Cpath d='m18 22 4-4'/%3E%3Cpath d='m2 6 4-4'/%3E%3Cpath d='m3 10 7-7'/%3E%3Cpath d='m14 21 7-7'/%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0B0E15">
+<title>Ruta al Carnet</title>
+<style>
+:root{
+  --bg:#0B0E15;
+  --bg-2:#0F1420;
+  --card:#151B29;
+  --card-2:#1B2334;
+  --linea:rgba(255,255,255,.07);
+  --linea-2:rgba(255,255,255,.12);
+  --texto:#EEF2F8;
+  --texto-2:#8B94A7;
+  --texto-3:#5A6478;
+  --cian:#22D3EE;
+  --azul:#3B82F6;
+  --verde:#34D399;
+  --verde-int:#10B981;
+  --rojo:#F87171;
+  --rojo-int:#EF4444;
+  --ambar:#FBBF24;
+  --grad:linear-gradient(135deg,#22D3EE 0%,#3B82F6 100%);
+  --grad-verde:linear-gradient(135deg,#34D399 0%,#10B981 100%);
+  --grad-rojo:linear-gradient(135deg,#F87171 0%,#EF4444 100%);
+  --grad-ambar:linear-gradient(135deg,#FCD34D 0%,#F59E0B 100%);
+  --st:env(safe-area-inset-top,0px);
+  --sb:env(safe-area-inset-bottom,0px);
+  --fr:ui-rounded,-apple-system,BlinkMacSystemFont,"SF Pro Rounded",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{color-scheme:dark}
+html,body{height:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+  background:var(--bg);color:var(--texto);
+  overscroll-behavior:none;-webkit-user-select:none;user-select:none;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(520px 340px at 85% -60px, rgba(59,130,246,.16), transparent 70%),
+    radial-gradient(420px 300px at -10% 20%, rgba(34,211,238,.08), transparent 70%);
+}
+.app{max-width:480px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;position:relative;z-index:1}
+.pantalla{display:none;flex:1;flex-direction:column;padding-bottom:calc(104px + var(--sb))}
+.pantalla.activa{display:flex;animation:aparece .32s cubic-bezier(.2,.8,.3,1)}
+@keyframes aparece{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ---------- Cabecera de estado ---------- */
+.estado{
+  position:sticky;top:0;z-index:20;
+  background:rgba(11,14,21,.72);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);
+  padding:calc(12px + var(--st)) 18px 12px;
+  display:flex;gap:8px;
+  border-bottom:1px solid var(--linea);
+}
+.chip{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:6px;
+  background:var(--card);border:1px solid var(--linea);border-radius:14px;
+  padding:9px 6px;font-family:var(--fr);font-weight:800;font-size:15px;
+}
+.chip .icono{font-size:15px}
+.chip.racha span:last-child{color:#FB923C}
+.chip.xp span:last-child{color:var(--ambar)}
+.chip.vidas span:last-child{color:var(--rojo)}
+.chip small{font-size:10px;font-weight:700;color:var(--texto-3);letter-spacing:.5px;text-transform:uppercase}
+
+/* ---------- Home / hero ---------- */
+.hero{padding:26px 22px 4px;display:flex;align-items:center;gap:18px}
+.hero-textos h1{
+  font-family:var(--fr);font-size:27px;font-weight:900;letter-spacing:-.6px;line-height:1.1;
+  background:linear-gradient(120deg,#fff 30%,#93C5FD);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero-textos p{color:var(--texto-2);font-size:13.5px;margin-top:5px;font-weight:500}
+.anillo{position:relative;width:74px;height:74px;flex:none}
+.anillo svg{transform:rotate(-90deg)}
+.anillo .fondo{stroke:var(--card-2)}
+.anillo .valor{stroke:url(#gradAnillo);stroke-linecap:round;transition:stroke-dashoffset .6s cubic-bezier(.2,.8,.3,1)}
+.anillo .centro{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-family:var(--fr);
+}
+.anillo .centro b{font-size:19px;font-weight:900}
+.anillo .centro small{font-size:8.5px;font-weight:800;color:var(--texto-3);letter-spacing:.8px;text-transform:uppercase}
+
+/* ---------- La carretera ---------- */
+.carretera-wrap{padding:10px 0 30px}
+.carretera{
+  position:relative;margin:14px auto 0;width:108px;
+  background:linear-gradient(180deg,#141926,#10141F);
+  border:1px solid var(--linea);
+  border-radius:54px;
+  padding:40px 0;
+  display:flex;flex-direction:column;align-items:center;gap:58px;
+  box-shadow:inset 0 2px 18px rgba(0,0,0,.5);
+}
+.carretera::before{
+  content:"";position:absolute;top:30px;bottom:30px;left:50%;width:4px;margin-left:-2px;
+  background-image:linear-gradient(to bottom,rgba(34,211,238,.65) 0 20px,transparent 20px 38px);
+  background-size:4px 38px;border-radius:2px;
+  filter:drop-shadow(0 0 6px rgba(34,211,238,.45));
+}
+.nodo{
+  position:relative;z-index:2;width:78px;height:78px;border:none;background:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .15s cubic-bezier(.2,.8,.3,1);
+  animation:nodoPop .5s cubic-bezier(.2,.8,.3,1) backwards;
+}
+.nodo:active{transform:scale(.9)}
+.nodo .disco{
+  width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:26px;position:relative;
+  background:linear-gradient(145deg,#2A3550,#1A2236);
+  border:1px solid var(--linea-2);
+  box-shadow:0 8px 24px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.12);
+}
+.nodo.iniciado .disco{
+  background:linear-gradient(145deg,#1D4ED8,#0891B2);
+  box-shadow:0 8px 26px rgba(34,145,238,.35), inset 0 1px 0 rgba(255,255,255,.25);
+}
+.nodo.dominado .disco{
+  background:linear-gradient(145deg,#059669,#10B981);
+  box-shadow:0 8px 26px rgba(16,185,129,.35), inset 0 1px 0 rgba(255,255,255,.25);
+}
+@keyframes nodoPop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+.nodo .coronas{
+  position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);
+  background:var(--card);border:1px solid var(--linea-2);border-radius:99px;padding:2.5px 9px;
+  font-size:9.5px;color:var(--ambar);letter-spacing:1.5px;white-space:nowrap;font-weight:900;
+}
+.nodo .etiqueta{
+  position:absolute;left:96px;top:50%;transform:translateY(-50%);
+  width:140px;text-align:left;font-size:13.5px;font-weight:800;line-height:1.25;
+  font-family:var(--fr);color:var(--texto);
+}
+.nodo:nth-child(even) .etiqueta{left:auto;right:96px;text-align:right}
+.nodo .etiqueta small{display:block;font-weight:600;color:var(--texto-3);font-size:11px;margin-top:2px;font-family:-apple-system,sans-serif}
+
+/* ---------- Botones ---------- */
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:none;cursor:pointer;
+  font-family:var(--fr);font-weight:900;font-size:16.5px;letter-spacing:-.2px;
+  padding:17px;border-radius:18px;color:#fff;position:relative;overflow:hidden;
+  transition:transform .12s ease,opacity .12s;
+}
+.btn::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 1px 0 rgba(255,255,255,.28)}
+.btn:active{transform:scale(.97)}
+.btn-primario{background:var(--grad);box-shadow:0 8px 24px rgba(59,130,246,.35)}
+.btn-verde{background:var(--grad-verde);box-shadow:0 8px 24px rgba(16,185,129,.3);color:#06281B}
+.btn-rojo{background:var(--grad-rojo);box-shadow:0 8px 24px rgba(239,68,68,.3)}
+.btn-sec{background:var(--card-2);border:1px solid var(--linea-2);color:var(--texto);box-shadow:none}
+.btn-sec::after{box-shadow:none}
+.btn[disabled]{opacity:.35;pointer-events:none}
+
+/* ---------- Secciones y tarjetas ---------- */
+.seccion{padding:24px 20px 8px}
+.seccion h2{font-family:var(--fr);font-size:23px;font-weight:900;letter-spacing:-.5px;margin-bottom:5px}
+.seccion .sub{color:var(--texto-2);font-size:13.5px;margin-bottom:18px;line-height:1.5}
+.tarjeta{
+  background:var(--card);border:1px solid var(--linea);border-radius:22px;
+  padding:20px;margin-bottom:14px;
+}
+.tarjeta h3{font-family:var(--fr);font-size:16px;font-weight:800;margin-bottom:12px}
+.dato-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dato{
+  background:var(--card-2);border:1px solid var(--linea);border-radius:16px;padding:14px;
+}
+.dato b{display:block;font-family:var(--fr);font-size:22px;font-weight:900;letter-spacing:-.5px}
+.dato span{font-size:11px;font-weight:700;color:var(--texto-3);text-transform:uppercase;letter-spacing:.6px;margin-top:3px;display:block}
+
+/* ---------- Quiz ---------- */
+.quiz-top{display:flex;align-items:center;gap:14px;padding:calc(14px + var(--st)) 18px 14px}
+.quiz-cerrar{
+  width:34px;height:34px;flex:none;border-radius:50%;border:1px solid var(--linea-2);
+  background:var(--card);color:var(--texto-2);font-size:15px;cursor:pointer;font-weight:700;
+}
+.quiz-progreso{flex:1;height:12px;background:var(--card-2);border-radius:99px;overflow:hidden}
+.quiz-progreso div{height:100%;background:var(--grad);border-radius:99px;transition:width .4s cubic-bezier(.2,.8,.3,1);min-width:10px;box-shadow:0 0 12px rgba(34,211,238,.5)}
+.quiz-hud{font-family:var(--fr);font-weight:900;font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
+#quizVidas{color:var(--rojo)}
+#quizTimer{color:var(--cian)}
+
+.quiz-cuerpo{flex:1;padding:6px 20px 12px;display:flex;flex-direction:column}
+.quiz-tema{
+  display:inline-flex;align-self:flex-start;
+  font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--cian);
+  background:rgba(34,211,238,.1);border:1px solid rgba(34,211,238,.25);
+  padding:5px 12px;border-radius:99px;margin-bottom:16px;
+}
+.quiz-pregunta{
+  font-family:var(--fr);font-size:20px;font-weight:800;line-height:1.35;letter-spacing:-.3px;
+  margin-bottom:22px;
+}
+.opcion{
+  width:100%;text-align:left;background:var(--card);border:1.5px solid var(--linea-2);border-radius:18px;
+  padding:16px 18px;font-size:15.5px;font-weight:600;color:var(--texto);margin-bottom:12px;cursor:pointer;
+  transition:all .15s ease;line-height:1.35;font-family:-apple-system,sans-serif;
+}
+.opcion:active{transform:scale(.98)}
+.opcion.elegida{border-color:var(--cian);background:rgba(34,211,238,.09);box-shadow:0 0 0 3px rgba(34,211,238,.14),0 6px 20px rgba(34,211,238,.12)}
+.opcion.correcta{border-color:var(--verde);background:rgba(52,211,153,.1);color:#A7F3D0}
+.opcion.incorrecta{border-color:var(--rojo);background:rgba(248,113,113,.09);color:#FECACA}
+.opcion[disabled]{pointer-events:none}
+
+.quiz-pie{padding:0 20px calc(18px + var(--sb));margin-top:auto}
+.feedback{border-radius:20px;padding:16px 18px;margin-bottom:14px;display:none;animation:aparece .25s ease}
+.feedback.ok{display:block;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.3)}
+.feedback.mal{display:block;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3)}
+.feedback b{font-family:var(--fr);font-size:16px;display:block;margin-bottom:5px}
+.feedback.ok b{color:var(--verde)} .feedback.mal b{color:var(--rojo)}
+.feedback span{font-size:13.5px;line-height:1.5;display:block;color:var(--texto-2)}
+
+/* ---------- Resultado ---------- */
+.resultado{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:32px 26px;gap:6px}
+.resultado .emoji{font-size:76px;margin-bottom:10px;filter:drop-shadow(0 10px 30px rgba(59,130,246,.4));animation:flota 3s ease-in-out infinite}
+@keyframes flota{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.resultado h2{
+  font-family:var(--fr);font-size:30px;font-weight:900;letter-spacing:-.7px;
+  background:linear-gradient(120deg,#fff 30%,#93C5FD);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.resultado p{color:var(--texto-2);font-size:14.5px;line-height:1.55;max-width:300px;margin-top:4px}
+.recompensas{display:flex;gap:10px;margin:22px 0 10px;width:100%;max-width:330px}
+.recompensa{flex:1;background:var(--card);border:1px solid var(--linea);border-radius:18px;padding:14px 6px}
+.recompensa .valor{font-size:22px;font-weight:900;font-family:var(--fr);letter-spacing:-.5px}
+.recompensa .nombre{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--texto-3);margin-top:3px}
+.recompensa.oro .valor{color:var(--ambar)}
+.recompensa.verde .valor{color:var(--verde)}
+.recompensa.rojo .valor{color:var(--rojo)}
+
+/* ---------- TodoTest ---------- */
+.form-fila{display:flex;gap:10px;margin-bottom:12px}
+.form-fila input{
+  flex:1;border:1.5px solid var(--linea-2);border-radius:16px;padding:14px 16px;font-size:16px;
+  font-family:inherit;background:var(--card-2);color:var(--texto);
+  -webkit-user-select:text;user-select:text;
+}
+.form-fila input::placeholder{color:var(--texto-3)}
+.form-fila input:focus{outline:none;border-color:var(--cian);box-shadow:0 0 0 3px rgba(34,211,238,.15)}
+canvas#graficaTT{width:100%;height:195px;display:block;margin-top:4px}
+.registro-fila{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--linea);font-size:14px}
+.registro-fila:last-child{border-bottom:none;padding-bottom:2px}
+.registro-fila > span:first-child{color:var(--texto-2);font-variant-numeric:tabular-nums}
+.pastilla{font-weight:800;font-family:var(--fr);border-radius:99px;padding:4px 12px;font-size:12px}
+.pastilla.apto{background:rgba(52,211,153,.12);color:var(--verde);border:1px solid rgba(52,211,153,.3)}
+.pastilla.noapto{background:rgba(248,113,113,.1);color:var(--rojo);border:1px solid rgba(248,113,113,.28)}
+.borrar-reg{background:none;border:none;color:var(--texto-3);font-size:16px;cursor:pointer;padding:4px 0 4px 12px}
+#ttResumen{font-size:13.5px;color:var(--texto-2);line-height:1.5;margin-bottom:6px}
+
+/* ---------- Perfil ---------- */
+.tema-stat{display:flex;align-items:center;gap:11px;padding:8px 0}
+.tema-stat .nombre{flex:1;font-size:13px;font-weight:700;font-family:var(--fr)}
+.tema-stat .mini-barra{flex:1.15;height:8px;background:var(--card-2);border-radius:99px;overflow:hidden}
+.tema-stat .mini-barra div{height:100%;border-radius:99px;transition:width .5s ease}
+.tema-stat .pct{font-size:12px;font-weight:800;color:var(--texto-2);width:38px;text-align:right;font-variant-numeric:tabular-nums;font-family:var(--fr)}
+.logros{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.logro{background:var(--card);border:1px solid var(--linea);border-radius:18px;padding:14px 6px;text-align:center;transition:all .2s}
+.logro .icono{font-size:26px}
+.logro .nombre{font-size:10.5px;font-weight:700;color:var(--texto-2);margin-top:6px;line-height:1.3}
+.logro.desbloqueado{border-color:rgba(251,191,36,.35);background:linear-gradient(180deg,rgba(251,191,36,.08),var(--card))}
+.logro.bloqueado{opacity:.32;filter:grayscale(1)}
+
+/* ---------- Dock de pestañas ---------- */
+.tabs{
+  position:fixed;bottom:calc(12px + var(--sb));left:14px;right:14px;z-index:30;
+  max-width:452px;margin:0 auto;
+  background:rgba(21,27,41,.82);backdrop-filter:blur(24px) saturate(1.5);-webkit-backdrop-filter:blur(24px) saturate(1.5);
+  border:1px solid var(--linea-2);border-radius:26px;
+  display:flex;padding:7px;
+  box-shadow:0 12px 40px rgba(0,0,0,.55);
+}
+.tab{
+  flex:1;background:none;border:none;cursor:pointer;text-align:center;border-radius:19px;
+  font-family:var(--fr);font-weight:800;font-size:10px;color:var(--texto-3);
+  display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0 7px;
+  transition:all .2s ease;
+}
+.tab .icono{font-size:21px;filter:grayscale(1);opacity:.5;transition:all .2s}
+.tab.activa{color:#BFDBFE;background:rgba(59,130,246,.16)}
+.tab.activa .icono{filter:none;opacity:1}
+
+.oculto{display:none!important}
+.confeti{position:fixed;inset:0;pointer-events:none;z-index:99;overflow:hidden}
+.confeti span{position:absolute;top:-8%;font-size:22px;animation:caer 2.6s linear forwards}
+@keyframes caer{to{transform:translateY(115vh) rotate(540deg)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
 </head>
 <body>
+<div class="app">
 
-<div class="app-header">
-  <div class="header-top">
-    <div class="tag" id="tag"></div>
-    <div class="lang-switch">
-      <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
-      <button class="lang-btn" data-lang="es" onclick="setLang('es')">ES</button>
-    </div>
-  </div>
-  <div class="header-row">
-    <h1 class="logo">MUSCLE<br><span>PROTOCOL</span></h1>
-    <div class="header-streak" id="hdr-streak">
-      <div class="streak-fire-hdr" id="hdr-fire"></div>
-      <div class="streak-num-hdr" id="hdr-streak-num">0</div>
-      <div class="streak-lbl-hdr" id="streak-lbl" data-i18n-html="streakLbl"></div>
-    </div>
-  </div>
-</div>
-
-<div class="stats-bar">
-  <div class="stat"><div class="stat-value" id="s-total">0</div><div class="stat-label" data-i18n="stTotal">Total workouts</div></div>
-  <div class="stat"><div class="stat-value" id="s-week">0/4</div><div class="stat-label" data-i18n="stWeek">This week</div></div>
-  <div class="stat"><div class="stat-value" id="s-best">0</div><div class="stat-label" data-i18n="stBest">Best streak</div></div>
-  <div class="stat"><div class="stat-value" id="s-consist">&mdash;</div><div class="stat-label" data-i18n="stConsist">Consistency</div></div>
-</div>
-
-<div class="nav-tabs" id="nav-tabs"></div>
-
-<div class="main-content">
-
-  <!-- TRACKER -->
-  <div id="view-tracker" class="view active">
-    <div class="tracker-layout">
-      <div class="cal-card">
-        <div class="cal-nav">
-          <button class="cal-nav-btn" onclick="changeMonth(-1)">&lsaquo;</button>
-          <div class="cal-month-lbl" id="cal-lbl"></div>
-          <button class="cal-nav-btn" onclick="changeMonth(1)">&rsaquo;</button>
-        </div>
-        <div class="cal-grid" id="cal-grid"></div>
-        <div class="cal-legend" id="cal-legend"></div>
+  <!-- ============ RUTA ============ -->
+  <section class="pantalla activa" id="p-ruta">
+    <header class="estado">
+      <div class="chip racha"><span class="icono">🔥</span><span id="rachaN">0</span></div>
+      <div class="chip xp"><span class="icono">⚡</span><span id="xpN">0</span></div>
+      <div class="chip vidas"><span class="icono">❤️</span><span id="vidasN">5</span></div>
+    </header>
+    <div class="hero">
+      <div class="anillo">
+        <svg width="74" height="74" viewBox="0 0 74 74">
+          <defs><linearGradient id="gradAnillo" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#22D3EE"/><stop offset="100%" stop-color="#3B82F6"/>
+          </linearGradient></defs>
+          <circle class="fondo" cx="37" cy="37" r="31" fill="none" stroke-width="7"/>
+          <circle class="valor" id="anilloValor" cx="37" cy="37" r="31" fill="none" stroke-width="7"
+            stroke-dasharray="194.8" stroke-dashoffset="194.8"/>
+        </svg>
+        <div class="centro"><b id="nivelNum">1</b><small>Nivel</small></div>
       </div>
-      <div class="tracker-side">
-        <div class="streak-hero">
-          <span class="sh-fire" id="sh-fire"></span>
-          <span class="sh-num" id="sh-num">0</span>
-          <div class="sh-lbl" data-i18n="curStreak">Current streak</div>
-          <div class="sh-sub" id="sh-sub"></div>
-        </div>
-        <div class="mini-stats">
-          <div class="ms"><div class="ms-val" id="ms-week">0/4</div><div class="ms-lbl" data-i18n="msWeek">This week</div></div>
-          <div class="ms"><div class="ms-val" id="ms-best">0</div><div class="ms-lbl" data-i18n="msBest">Best streak</div></div>
-          <div class="ms"><div class="ms-val" id="ms-total">0</div><div class="ms-lbl" data-i18n="msTotal">Total</div></div>
-        </div>
-        <button class="log-today-btn" id="log-today-btn" onclick="openPanel(null)"></button>
-        <div class="recent-hdr" data-i18n="recent">Recent sessions</div>
-        <div class="recent-list" id="recent-list">
-          <div class="empty-note">No sessions logged yet</div>
-        </div>
+      <div class="hero-textos">
+        <h1>Ruta al carnet</h1>
+        <p>Permiso B · Teórica DGT 2026</p>
+        <p id="nivelTexto" style="margin-top:2px;font-size:12px;color:var(--texto-3)"></p>
       </div>
     </div>
-  </div>
+    <div class="carretera-wrap"><div class="carretera" id="carretera"></div></div>
+  </section>
 
-  <!-- ROUTINE -->
-  <div id="view-routine" class="view">
-    <div class="sub-tabs">
-      <button class="sub-tab active" onclick="showSub('week',this)" data-i18n="subWeekly">Weekly plan</button>
-      <button class="sub-tab" onclick="showSub('principles',this)" data-i18n="subPrinciples">Principles</button>
+  <!-- ============ EXAMEN ============ -->
+  <section class="pantalla" id="p-examen">
+    <header class="estado">
+      <div class="chip racha"><span class="icono">🔥</span><span id="rachaN2">0</span></div>
+      <div class="chip xp"><span class="icono">⚡</span><span id="xpN2">0</span></div>
+      <div class="chip vidas"><span class="icono">❤️</span><span id="vidasN2">5</span></div>
+    </header>
+    <div class="seccion">
+      <h2>Simulacro de examen</h2>
+      <p class="sub">Como el oficial de la DGT: 30 preguntas, 30 minutos y máximo 3 fallos para el APTO. Aquí no se gastan corazones.</p>
+      <div class="tarjeta">
+        <div class="dato-grid">
+          <div class="dato"><b id="exTotales">0</b><span>Simulacros</span></div>
+          <div class="dato"><b id="exAptos">0</b><span>Aptos</span></div>
+          <div class="dato"><b id="exMejor">—</b><span>Mejor resultado</span></div>
+          <div class="dato"><b id="exRachaAptos">0</b><span>Aptos seguidos</span></div>
+        </div>
+      </div>
+      <button class="btn btn-primario" id="btnEmpezarExamen">Empezar simulacro 🚦</button>
     </div>
-    <div id="sub-week"><div class="days-grid" id="days-grid"></div></div>
-    <div id="sub-principles" style="display:none">
-      <div class="principles-grid" id="principles-grid"></div>
+  </section>
+
+  <!-- ============ TODOTEST ============ -->
+  <section class="pantalla" id="p-todotest">
+    <header class="estado">
+      <div class="chip racha"><span class="icono">🔥</span><span id="rachaN3">0</span></div>
+      <div class="chip xp"><span class="icono">⚡</span><span id="xpN3">0</span></div>
+      <div class="chip vidas"><span class="icono">❤️</span><span id="vidasN3">5</span></div>
+    </header>
+    <div class="seccion">
+      <h2>Diario TodoTest</h2>
+      <p class="sub">Apunta los fallos de cada test que hagas en TodoTest y observa tu curva bajar hacia la zona del apto. Registrar cuenta para tu racha y da +15 XP.</p>
+      <div class="tarjeta">
+        <h3>Registrar test</h3>
+        <div class="form-fila">
+          <input type="number" id="ttFallos" inputmode="numeric" min="0" max="30" placeholder="Fallos (0–30)">
+        </div>
+        <button class="btn btn-verde" id="btnGuardarTT">Guardar resultado</button>
+      </div>
+      <div class="tarjeta">
+        <h3>Tu progresión</h3>
+        <p id="ttResumen">Aún no hay tests registrados.</p>
+        <canvas id="graficaTT" width="640" height="390"></canvas>
+      </div>
+      <div class="tarjeta">
+        <h3>Últimos tests</h3>
+        <div id="ttLista"><p style="font-size:13px;color:var(--texto-3)">Nada por aquí todavía.</p></div>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- NUTRITION -->
-  <div id="view-nutrition" class="view">
-    <div class="sec-hdr" data-i18n="secNutrition">Macros &amp; fuel</div>
-    <div class="nut-grid" id="nut-grid"></div>
-    <div class="info-box" id="nut-info" style="margin-top:8px"></div>
-    <div class="disclaimer" id="nut-disc"></div>
-  </div>
-
-  <!-- PROGRESSION -->
-  <div id="view-progression" class="view">
-    <div class="sec-hdr" data-i18n="sec12">12-week plan</div>
-    <div class="prog-phases" id="prog-phases"></div>
-    <div class="pr-section">
-      <div class="sec-hdr" style="margin-top:24px" data-i18n="secWeightProg">Weight progression</div>
-      <div class="pr-lift-tabs" id="pr-lift-tabs"></div>
-      <div class="pr-chart" id="pr-chart"></div>
+  <!-- ============ PERFIL ============ -->
+  <section class="pantalla" id="p-perfil">
+    <header class="estado">
+      <div class="chip racha"><span class="icono">🔥</span><span id="rachaN4">0</span></div>
+      <div class="chip xp"><span class="icono">⚡</span><span id="xpN4">0</span></div>
+      <div class="chip vidas"><span class="icono">❤️</span><span id="vidasN4">5</span></div>
+    </header>
+    <div class="seccion">
+      <h2>Tu progreso</h2>
+      <p class="sub">Precisión acumulada por tema. Ataca primero lo que esté en rojo.</p>
+      <div class="tarjeta" id="statsTemas"></div>
+      <h2 style="margin-top:10px">Logros</h2>
+      <p class="sub">Se desbloquean solos mientras estudias.</p>
+      <div class="logros" id="logros"></div>
+      <h2 style="margin-top:10px">Copia de seguridad</h2>
+      <p class="sub">Tu progreso se guarda en este navegador. Exporta una copia de vez en cuando por si cambias de móvil o el navegador borra datos.</p>
+      <div style="display:flex;gap:10px;margin-bottom:14px">
+        <button class="btn btn-sec" id="btnExportar" style="flex:1">Exportar</button>
+        <button class="btn btn-sec" id="btnImportar" style="flex:1">Importar</button>
+      </div>
+      <input type="file" id="ficheroImportar" accept=".json" class="oculto">
+      <div style="margin-top:6px">
+        <button class="btn btn-sec" id="btnReiniciar" style="color:var(--rojo)">Reiniciar todo el progreso</button>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- EXERCISES -->
-  <div id="view-exercises" class="view">
-    <div class="guide-intro" data-i18n-html="guideIntro">Tap any exercise for a step-by-step guide using your 5&nbsp;kg and 8&nbsp;kg dumbbells.</div>
-    <div id="ex-guide"></div>
-  </div>
+  <!-- ============ QUIZ ============ -->
+  <section class="pantalla" id="p-quiz">
+    <div class="quiz-top">
+      <button class="quiz-cerrar" id="quizCerrar">✕</button>
+      <div class="quiz-progreso"><div id="quizBarra" style="width:0%"></div></div>
+      <div class="quiz-hud oculto" id="quizVidas">❤️ 5</div>
+      <div class="quiz-hud oculto" id="quizTimer">30:00</div>
+    </div>
+    <div class="quiz-cuerpo">
+      <div class="quiz-tema" id="quizTema"></div>
+      <div class="quiz-pregunta" id="quizPregunta"></div>
+      <div id="quizOpciones"></div>
+    </div>
+    <div class="quiz-pie">
+      <div class="feedback" id="quizFeedback"><b></b><span></span></div>
+      <button class="btn btn-primario" id="quizBoton" disabled>Comprobar</button>
+    </div>
+  </section>
 
+  <!-- ============ RESULTADO ============ -->
+  <section class="pantalla" id="p-resultado">
+    <div class="resultado">
+      <div class="emoji" id="resEmoji">🎉</div>
+      <h2 id="resTitulo">¡Lección completada!</h2>
+      <p id="resTexto"></p>
+      <div class="recompensas" id="resRecompensas"></div>
+      <div style="width:100%;max-width:330px;margin-top:12px">
+        <button class="btn btn-primario" id="resContinuar">Continuar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DOCK ============ -->
+  <nav class="tabs" id="tabs">
+    <button class="tab activa" data-tab="p-ruta"><span class="icono">🛣️</span>Ruta</button>
+    <button class="tab" data-tab="p-examen"><span class="icono">🚦</span>Examen</button>
+    <button class="tab" data-tab="p-todotest"><span class="icono">📊</span>TodoTest</button>
+    <button class="tab" data-tab="p-perfil"><span class="icono">🏆</span>Perfil</button>
+  </nav>
 </div>
 
-<!-- LOG PANEL -->
-<div class="overlay" id="overlay" onclick="handleOverlay(event)">
-  <div class="log-panel">
-    <button class="pclose" onclick="closePanel()">&times;</button>
-    <div class="panel-title" id="panel-title">LOG</div>
-    <div class="panel-date" id="panel-date"></div>
-    <label class="flbl" data-i18n="fldWorkout">Workout</label>
-    <div class="type-grid" id="type-grid"></div>
-    <div id="lifts-container"></div>
-    <label class="flbl" style="margin-top:4px" data-i18n="fldNotes">Session notes</label>
-    <textarea class="notes-input" id="log-notes" data-i18n-ph="notesPh" placeholder="How did it feel? Any progress? General sensations..."></textarea>
-    <button class="save-btn" id="save-btn" onclick="saveLog()" data-i18n="save">Save session</button>
-    <button class="del-btn" id="del-btn" onclick="deleteLog()">Delete entry</button>
-  </div>
-</div>
 
-<div class="toast" id="toast"></div>
+<script>
+/* ============ BANCO DE PREGUNTAS · estilo DGT · actualizado a normativa vigente en 2026 ============ */
+const TEMAS = [
+  {id:"senales",    nombre:"Señales",             icono:"🔺", sub:"Tipos y prioridad"},
+  {id:"novedades",  nombre:"Novedades 2026",      icono:"🆕", sub:"VMP, ZBE y V-16"},
+  {id:"velocidad",  nombre:"Velocidad",           icono:"⏱️", sub:"Límites y distancias"},
+  {id:"prioridad",  nombre:"Prioridad de paso",   icono:"➡️", sub:"Cruces y glorietas"},
+  {id:"maniobras",  nombre:"Maniobras",           icono:"↩️", sub:"Adelantar y girar"},
+  {id:"alcohol",    nombre:"Alcohol y conductor", icono:"🚫", sub:"Tasas y factores"},
+  {id:"seguridad",  nombre:"Seguridad vial",      icono:"🛡️", sub:"Cinturón y sistemas"},
+  {id:"documentos", nombre:"Documentación",       icono:"🪪", sub:"Permisos y puntos"},
+  {id:"mecanica",   nombre:"Mecánica",            icono:"🔧", sub:"Neumáticos y luces"},
+  {id:"emergencias",nombre:"Emergencias",         icono:"🚑", sub:"Accidentes y PAS"}
+];
 
-<script src="app.js"></script>
+const BANCO = [
+/* --- Señales --- */
+{t:"senales",q:"Una señal triangular con el borde rojo indica, en general...",o:["Una obligación","Un peligro","Una prohibición"],a:1,e:"Las señales de advertencia de peligro son triangulares con borde rojo. Las circulares indican prohibición u obligación."},
+{t:"senales",q:"Las señales circulares con fondo azul y símbolo blanco indican...",o:["Obligación","Recomendación","Indicación de servicio"],a:0,e:"Fondo azul circular = obligación (por ejemplo, sentido obligatorio o camino para peatones)."},
+{t:"senales",q:"Una señal circular con borde rojo y fondo blanco indica...",o:["Peligro","Prohibición o restricción","Fin de prohibición"],a:1,e:"Es el formato típico de las señales de prohibición: entrada prohibida, velocidad máxima, etc."},
+{t:"senales",q:"Ante la señal de STOP, usted debe...",o:["Detenerse solo si vienen vehículos","Detenerse siempre y ceder el paso","Reducir la velocidad y continuar"],a:1,e:"El STOP obliga a detenerse siempre, haya o no tráfico, y a ceder el paso."},
+{t:"senales",q:"Una línea longitudinal continua en la calzada...",o:["No debe rebasarse ni circular sobre ella","Puede rebasarse para adelantar","Solo afecta a los camiones"],a:0,e:"La marca vial continua prohíbe atravesarla o circular sobre ella, salvo excepciones muy concretas."},
+{t:"senales",q:"Si las indicaciones de un agente contradicen a un semáforo, ¿qué debe obedecer?",o:["El semáforo","Al agente","La señal vertical más próxima"],a:1,e:"El orden de prioridad es: agentes, señalización circunstancial, semáforos, señales verticales y marcas viales."},
+{t:"senales",q:"Un semáforo con luz amarilla intermitente significa...",o:["Paso libre con prioridad","Precaución, sin eximir de las normas de prioridad","Detención obligatoria"],a:1,e:"La luz amarilla intermitente obliga a extremar la precaución y respetar la prioridad que corresponda."},
+{t:"senales",q:"Una señal circular blanca con una franja diagonal negra indica...",o:["Fin de prohibiciones","Prohibido el paso","Calzada sin salida"],a:0,e:"Es la señal de fin de prohibiciones (por ejemplo, fin de la limitación de velocidad o de adelantamiento)."},
+/* --- Novedades 2025-2026 --- */
+{t:"novedades",q:"El nuevo Catálogo Oficial de Señales de Tráfico (Real Decreto 465/2025) está en vigor desde...",o:["El 1 de julio de 2025","El 1 de enero de 2020","Aún no está en vigor"],a:0,e:"La mayor actualización de señales en dos décadas entró en vigor el 1 de julio de 2025, con 20 señales nuevas y 59 modernizadas, y se pregunta en el examen desde octubre de 2025."},
+{t:"novedades",q:"La señal que prohíbe el paso a los vehículos de movilidad personal (patinetes eléctricos) afecta a...",o:["Solo a los patinetes de alquiler","A todos los VMP","Solo a los menores de edad"],a:1,e:"La nueva señal R-118 prohíbe el paso a todos los vehículos de movilidad personal. Ignorarla puede suponer multa y pérdida de puntos."},
+{t:"novedades",q:"La señal de regulación por distintivo ambiental limita el acceso...",o:["A las Zonas de Bajas Emisiones según la etiqueta del vehículo","A los aparcamientos públicos","A las autopistas de peaje"],a:0,e:"Regula el acceso a las ZBE (Madrid, Barcelona y otras ciudades) según el distintivo ambiental: CERO, ECO, C o B."},
+{t:"novedades",q:"Con el nuevo catálogo, las señales temporales de zonas de obras se distinguen por su...",o:["Fondo amarillo con símbolos negros","Fondo verde","Tamaño más pequeño"],a:0,e:"Las señales de obras pasan a fondo amarillo para diferenciarse claramente de la señalización permanente."},
+{t:"novedades",q:"La nueva señal de peligro P-24a advierte específicamente de...",o:["Paso de ganado doméstico","Paso de animales salvajes como jabalíes","Zona de caza"],a:1,e:"Se creó por el aumento de accidentes con fauna salvaje: los jabalíes causan la mayoría de los siniestros con animales en España."},
+{t:"novedades",q:"En una retención en autopista o autovía, los conductores deben formar...",o:["Una fila única en el arcén","Un pasillo de emergencia entre carriles para los vehículos de auxilio","Nada en especial"],a:1,e:"El pasillo de emergencia permite el paso rápido de ambulancias, bomberos y policía entre los carriles en congestiones."},
+{t:"novedades",q:"Desde el 1 de enero de 2026, para señalizar un vehículo inmovilizado en vías interurbanas se debe usar...",o:["Los triángulos de preseñalización","La baliza luminosa V-16 conectada","Las luces largas encendidas"],a:1,e:"La V-16 conectada a la plataforma DGT 3.0 sustituye definitivamente a los triángulos en España desde el 1 de enero de 2026."},
+{t:"novedades",q:"Las nuevas señales de carril reservado para bicicletas y VMP implican que...",o:["Cualquier vehículo puede usarlo si hay tráfico","El resto de vehículos tiene prohibida la entrada","Solo es una recomendación"],a:1,e:"Los carriles señalizados como reservados para bicis y VMP son de uso obligatorio para ellos y están vedados al resto de vehículos."},
+/* --- Velocidad --- */
+{t:"velocidad",q:"En una vía urbana con un único carril por sentido, la velocidad máxima genérica es...",o:["30 km/h","50 km/h","40 km/h"],a:0,e:"En vías urbanas de un solo carril por sentido el límite genérico es 30 km/h."},
+{t:"velocidad",q:"La velocidad máxima de un turismo en autopista es de...",o:["100 km/h","120 km/h","130 km/h"],a:1,e:"Turismos y motocicletas: 120 km/h en autopistas y autovías."},
+{t:"velocidad",q:"En una carretera convencional, un turismo puede circular como máximo a...",o:["90 km/h","100 km/h","80 km/h"],a:0,e:"El límite genérico para turismos en carretera convencional es 90 km/h."},
+{t:"velocidad",q:"En vías urbanas con dos o más carriles por sentido, el límite genérico es...",o:["30 km/h","50 km/h","60 km/h"],a:1,e:"Con dos o más carriles por sentido de circulación, el límite urbano genérico es 50 km/h."},
+{t:"velocidad",q:"En calles de plataforma única (calzada y acera al mismo nivel), la velocidad máxima es...",o:["20 km/h","30 km/h","10 km/h"],a:0,e:"En vías de plataforma única el límite es de 20 km/h."},
+{t:"velocidad",q:"La velocidad mínima en autopista, salvo excepciones, es de...",o:["60 km/h","50 km/h","80 km/h"],a:0,e:"No se puede circular a menos de la mitad de la velocidad genérica: 60 km/h en autopista."},
+{t:"velocidad",q:"Al adelantar en una carretera convencional, ¿puede superar el límite de velocidad de la vía?",o:["Sí, en 20 km/h","No, en ningún caso","Solo los turismos"],a:1,e:"El margen de 20 km/h se eliminó en 2022: nunca se puede superar el límite de la vía, ni siquiera para adelantar."},
+{t:"velocidad",q:"Si llueve y el asfalto está mojado, la distancia de frenado...",o:["Se mantiene igual","Aumenta considerablemente","Disminuye"],a:1,e:"Con el firme mojado la adherencia baja y la distancia de frenado puede llegar a duplicarse."},
+/* --- Prioridad --- */
+{t:"prioridad",q:"En una intersección sin señalizar, la prioridad la tiene...",o:["El vehículo que se aproxima por la derecha","El vehículo más rápido","El vehículo que llega primero"],a:0,e:"Regla general: en ausencia de señalización, tiene preferencia el que viene por la derecha."},
+{t:"prioridad",q:"En una glorieta, ¿quién tiene prioridad?",o:["El que va a entrar","Los vehículos que ya circulan dentro","El que circula por el carril exterior"],a:1,e:"Los vehículos que circulan por el interior de la glorieta tienen prioridad sobre los que pretenden entrar."},
+{t:"prioridad",q:"Un peatón está cruzando por un paso de peatones sin semáforo. Usted debe...",o:["Tocar el claxon para avisar","Detenerse y cederle el paso","Rodearle con precaución"],a:1,e:"Los peatones tienen prioridad en los pasos señalizados: hay que detenerse y dejarles cruzar."},
+{t:"prioridad",q:"En un cruce entre una vía pavimentada y otra sin pavimentar, la prioridad es de...",o:["Quien circula por la vía pavimentada","Quien circula por la vía sin pavimentar","Quien venga por la derecha"],a:0,e:"Los vehículos que circulan por vía pavimentada tienen preferencia frente a los que vienen de una vía sin pavimentar."},
+{t:"prioridad",q:"Escucha la sirena de una ambulancia con las luces prioritarias encendidas. ¿Qué debe hacer?",o:["Mantener su trayectoria","Facilitarle el paso, apartándose si es necesario","Detenerse en seco donde esté"],a:1,e:"Hay que facilitar siempre el paso a los vehículos prioritarios en servicio urgente, sin maniobras bruscas."},
+{t:"prioridad",q:"En un estrechamiento sin señalizar donde no caben dos vehículos, tiene preferencia...",o:["El que ha entrado primero","El vehículo más grande","El que sube"],a:0,e:"Como norma general, en estrechamientos tiene prioridad el que entra primero en el tramo."},
+{t:"prioridad",q:"Ante la señal de 'ceda el paso', usted debe...",o:["Detenerse siempre","Ceder el paso, deteniéndose solo si es necesario","Continuar, porque tiene preferencia"],a:1,e:"El ceda obliga a dejar pasar a los demás; la detención solo es obligatoria si hace falta para ceder."},
+{t:"prioridad",q:"Al girar para entrar en otra vía, si hay peatones cruzándola...",o:["Tienen prioridad los peatones","Tiene prioridad el vehículo que gira","Depende de quién llegue antes"],a:0,e:"Los conductores deben ceder el paso a los peatones que cruzan la vía a la que se incorporan."},
+/* --- Maniobras --- */
+{t:"maniobras",q:"Para adelantar a un ciclista en carretera convencional debe...",o:["Dejar 1 metro de separación","Cambiar completamente de carril y dejar al menos 1,5 m","Tocar el claxon y pasar rápido"],a:1,e:"Es obligatorio cambiar de carril por completo y mantener una separación mínima de 1,5 metros."},
+{t:"maniobras",q:"¿Está permitido adelantar en un paso para peatones?",o:["Sí, si no hay peatones a la vista","No, salvo a velocidad tan reducida que permita detenerse a tiempo","Sí, siempre que sea de día"],a:1,e:"Como norma general está prohibido adelantar en pasos de peatones, salvo hacerlo a una velocidad que permita detenerse ante un peatón."},
+{t:"maniobras",q:"En un túnel con un solo carril por sentido, adelantar está...",o:["Permitido con precaución","Prohibido","Permitido solo de día"],a:1,e:"En túneles y pasos inferiores con un carril por sentido está prohibido adelantar."},
+{t:"maniobras",q:"Si otro vehículo le está adelantando, usted debe...",o:["Acelerar para que no le pase","No aumentar la velocidad e incluso reducirla si es preciso","Arrimarse al eje de la calzada"],a:1,e:"El adelantado tiene prohibido aumentar la velocidad y debe facilitar la maniobra."},
+{t:"maniobras",q:"La marcha atrás, como maniobra complementaria, tiene un recorrido máximo de...",o:["15 metros","25 metros","50 metros"],a:0,e:"Solo se permite como complemento de otra maniobra y con un máximo de 15 metros, nunca en autopistas ni autovías."},
+{t:"maniobras",q:"El cambio de sentido en una autopista está...",o:["Permitido por la mediana","Prohibido","Permitido si no hay tráfico"],a:1,e:"En autopistas y autovías está prohibido cambiar de sentido y circular marcha atrás."},
+{t:"maniobras",q:"Antes de iniciar un adelantamiento debe señalizarlo...",o:["Con el intermitente izquierdo","Con las luces de emergencia","No es necesario si no hay nadie detrás"],a:0,e:"Toda maniobra debe advertirse con antelación; el adelantamiento, con el indicador de dirección izquierdo."},
+{t:"maniobras",q:"¿Dónde está prohibido parar y estacionar?",o:["En los carriles bici y pasos de peatones","Solo donde haya señal expresa","En cualquier calle de sentido único"],a:0,e:"Está prohibido parar y estacionar, entre otros, en pasos de peatones, carriles bici, intersecciones y zonas de visibilidad reducida."},
+/* --- Alcohol y conductor --- */
+{t:"alcohol",q:"La tasa máxima de alcohol en aire espirado para un conductor general es de...",o:["0,25 mg/l","0,15 mg/l","0,50 mg/l"],a:0,e:"Conductores en general: 0,25 mg/l en aire espirado (0,5 g/l en sangre). La rebaja a 0,10 mg/l fue rechazada por el Congreso en marzo de 2026, así que estos límites siguen vigentes."},
+{t:"alcohol",q:"Para un conductor novel (menos de 2 años de permiso), la tasa máxima en aire es...",o:["0,25 mg/l","0,15 mg/l","0,00 mg/l"],a:1,e:"Noveles y profesionales: máximo 0,15 mg/l en aire espirado (0,3 g/l en sangre)."},
+{t:"alcohol",q:"Un menor de edad que conduzca un patinete, bicicleta o ciclomotor tiene una tasa de alcohol permitida de...",o:["0,15 mg/l","0,25 mg/l","0,0: tolerancia cero"],a:2,e:"Desde la reforma de la Ley de Tráfico, los menores tienen tasa cero: cualquier rastro de alcohol es sancionable."},
+{t:"alcohol",q:"Conducir con una tasa superior a 0,60 mg/l en aire espirado es...",o:["Una infracción leve","Un delito castigado en el Código Penal","Una infracción grave sin más"],a:1,e:"Superar 0,60 mg/l en aire (1,2 g/l en sangre) constituye delito contra la seguridad vial (art. 379.2 CP)."},
+{t:"alcohol",q:"Negarse a someterse a las pruebas de alcoholemia es...",o:["Un delito","Una multa de 200 euros","Un derecho del conductor"],a:0,e:"La negativa a las pruebas es un delito contra la seguridad vial (artículo 383 del Código Penal)."},
+{t:"alcohol",q:"¿Qué elimina el alcohol del organismo?",o:["El café cargado","Una ducha fría","Únicamente el paso del tiempo"],a:2,e:"El hígado metaboliza el alcohol a un ritmo fijo. Ni el café, ni el agua, ni el ejercicio lo aceleran."},
+{t:"alcohol",q:"La presencia de drogas en el organismo del conductor...",o:["Se sanciona solo si afecta a la conducción","Se sanciona en todo caso, salvo prescripción médica","Solo se sanciona de noche"],a:1,e:"Basta la mera presencia de drogas para ser sancionado, salvo tratamiento médico que no afecte a la conducción."},
+{t:"alcohol",q:"Si nota fatiga o sueño durante un viaje largo, lo correcto es...",o:["Abrir la ventanilla y subir la música","Parar en lugar seguro y descansar","Beber una bebida energética y continuar"],a:1,e:"El único remedio eficaz contra la fatiga es detenerse y descansar. Se recomienda parar cada 2 horas."},
+/* --- Seguridad --- */
+{t:"seguridad",q:"El cinturón de seguridad es obligatorio...",o:["Solo en carretera","En todos los asientos y también en ciudad","Solo para los ocupantes delanteros"],a:1,e:"Es obligatorio para todos los ocupantes, en todas las plazas y en todo tipo de vías."},
+{t:"seguridad",q:"Los niños con estatura igual o inferior a 135 cm deben viajar...",o:["Con un sistema de retención infantil adecuado","Solo con el cinturón del coche","En el asiento delantero con airbag"],a:0,e:"Deben usar un sistema de retención infantil homologado a su talla y peso, como norma general en los asientos traseros."},
+{t:"seguridad",q:"Usar el móvil sujetándolo con la mano mientras conduce supone la pérdida de...",o:["2 puntos","4 puntos","6 puntos"],a:2,e:"Conducir sujetando el móvil con la mano conlleva la retirada de 6 puntos, además de la multa."},
+{t:"seguridad",q:"El reposacabezas bien regulado sirve para...",o:["Ir más cómodo en viajes largos","Reducir las lesiones cervicales en caso de alcance","Apoyar la cabeza al conducir"],a:1,e:"Su función es de seguridad: evitar el latigazo cervical. La parte central debe quedar a la altura de los ojos."},
+{t:"seguridad",q:"El airbag frontal es eficaz...",o:["Por sí solo","Solo si se usa junto con el cinturón","Únicamente a baja velocidad"],a:1,e:"El airbag es un sistema complementario: sin cinturón puede incluso causar lesiones graves."},
+{t:"seguridad",q:"Si el vehículo sufre aquaplaning, lo correcto es...",o:["Frenar con fuerza","Sujetar el volante y levantar el pie del acelerador suavemente","Girar el volante hacia el arcén"],a:1,e:"No hay que frenar ni girar bruscamente: se sujeta el volante y se reduce gas hasta recuperar adherencia."},
+{t:"seguridad",q:"En una motocicleta, el casco...",o:["Es obligatorio y debe ir correctamente abrochado","Solo es obligatorio en carretera","Es recomendable pero voluntario"],a:0,e:"El casco homologado y bien abrochado es obligatorio para conductor y pasajero en cualquier vía."},
+{t:"seguridad",q:"Los sistemas de ayuda a la conducción (ADAS), como el frenado de emergencia...",o:["Sustituyen la atención del conductor","Asisten al conductor, que sigue siendo el responsable","Permiten soltar el volante"],a:1,e:"Los ADAS asisten pero no sustituyen: la atención y la responsabilidad siguen siendo del conductor. Es uno de los temas reforzados en el examen actual."},
+/* --- Documentación --- */
+{t:"documentos",q:"El permiso de clase B autoriza a conducir automóviles de hasta...",o:["3.500 kg de MMA y 9 plazas incluido el conductor","2.500 kg de MMA","4.500 kg de MMA"],a:0,e:"El permiso B cubre vehículos de hasta 3.500 kg de masa máxima autorizada y hasta 9 plazas contando al conductor."},
+{t:"documentos",q:"La edad mínima para obtener el permiso B es de...",o:["16 años","18 años","21 años"],a:1,e:"El permiso B se puede obtener a partir de los 18 años."},
+{t:"documentos",q:"Un conductor novel comienza con un saldo de...",o:["8 puntos","12 puntos","15 puntos"],a:0,e:"Los nuevos conductores empiezan con 8 puntos; a los 2 años sin sanciones pasan a 12 (máximo 15)."},
+{t:"documentos",q:"Para conducir en España una moto de hasta 125 cc con el permiso B se requiere...",o:["Solo tener el permiso B","Al menos 3 años de antigüedad del permiso B","Tener más de 30 años"],a:1,e:"Con 3 años de antigüedad del B se pueden llevar motos de hasta 125 cc, solo en territorio español. La normativa avanza además hacia exigir formación práctica específica."},
+{t:"documentos",q:"La primera ITV de un turismo nuevo se pasa a los...",o:["2 años","4 años","6 años"],a:1,e:"Los turismos pasan su primera inspección a los 4 años; después cada 2 años, y anualmente a partir de los 10."},
+{t:"documentos",q:"El seguro obligatorio del vehículo cubre...",o:["La responsabilidad civil frente a terceros","Los daños propios del vehículo","El robo del vehículo"],a:0,e:"El seguro obligatorio es de responsabilidad civil: cubre los daños causados a terceros."},
+{t:"documentos",q:"Si un conductor pierde todos sus puntos...",o:["Recupera el permiso automáticamente a los 3 meses","Debe hacer un curso de sensibilización y aprobar de nuevo un examen","Solo paga una multa"],a:1,e:"Perder el saldo de puntos supone perder la vigencia del permiso: curso de sensibilización y nuevo examen teórico."},
+{t:"documentos",q:"Circular sin haber obtenido nunca el permiso de conducir es...",o:["Una infracción leve","Un delito contra la seguridad vial","Una simple multa de aparcamiento"],a:1,e:"Conducir sin haber obtenido nunca el permiso está tipificado como delito en el Código Penal."},
+/* --- Mecánica --- */
+{t:"mecanica",q:"La profundidad mínima legal del dibujo de los neumáticos es de...",o:["1,6 mm","0,8 mm","3 mm"],a:0,e:"El dibujo debe tener al menos 1,6 mm en las ranuras principales; por debajo, el neumático es ilegal y peligroso."},
+{t:"mecanica",q:"La presión de los neumáticos debe comprobarse...",o:["Con los neumáticos fríos","Tras un viaje largo","Solo en verano"],a:0,e:"Se comprueba en frío: con el neumático caliente la presión aumenta y la lectura sería engañosa."},
+{t:"mecanica",q:"Si se enciende el testigo de presión de aceite durante la marcha, debe...",o:["Continuar hasta el próximo taller","Detenerse cuanto antes en lugar seguro y parar el motor","Acelerar para que circule mejor el aceite"],a:1,e:"Seguir circulando sin presión de aceite puede destruir el motor. Hay que detenerse y comprobar."},
+{t:"mecanica",q:"La luz antiniebla trasera debe usarse...",o:["Siempre de noche","Solo con condiciones meteorológicas muy desfavorables","En túneles"],a:1,e:"Por su intensidad deslumbra: solo se usa con niebla espesa, lluvia muy intensa o nevada."},
+{t:"mecanica",q:"Un neumático muy desgastado provoca...",o:["Mayor distancia de frenado y riesgo de aquaplaning","Menor consumo sin más efectos","Mejor agarre en seco"],a:0,e:"Sin dibujo, el neumático no evacúa agua: aumenta la distancia de frenado y el riesgo de aquaplaning."},
+{t:"mecanica",q:"La luz de cruce debe permitir ver, como mínimo, a una distancia de...",o:["40 metros","100 metros","10 metros"],a:0,e:"El alumbrado de cruce ilumina al menos 40 metros; el de carretera (largas), 100 metros."},
+{t:"mecanica",q:"¿Cada cuánto conviene revisar el nivel de líquido de frenos?",o:["Nunca, es de por vida","Periódicamente, según el mantenimiento del fabricante","Solo si el pedal se hunde del todo"],a:1,e:"Los niveles (frenos, aceite, refrigerante) se revisan periódicamente; un nivel bajo de frenos es una avería grave."},
+{t:"mecanica",q:"Llevar el maletero sobrecargado y mal repartido...",o:["No afecta a la conducción","Alarga la frenada y desestabiliza el vehículo","Mejora la tracción"],a:1,e:"La carga mal distribuida modifica el comportamiento del coche, alarga la frenada y puede deslumbrar si hunde la trasera."},
+/* --- Emergencias --- */
+{t:"emergencias",q:"La conducta P.A.S. ante un accidente significa...",o:["Proteger, Avisar, Socorrer","Parar, Acelerar, Salir","Pedir Ayuda Siempre"],a:0,e:"Primero proteger el lugar, después avisar al 112 y por último socorrer a las víctimas."},
+{t:"emergencias",q:"El teléfono único de emergencias en España y la UE es el...",o:["091","112","061"],a:1,e:"El 112 es el número único de emergencias, gratuito y disponible las 24 horas."},
+{t:"emergencias",q:"A un herido en un accidente de tráfico, como norma general...",o:["Hay que sacarlo del vehículo cuanto antes","No se le debe mover, salvo peligro inminente como un incendio","Hay que darle agua"],a:1,e:"Mover a un herido puede agravar lesiones medulares. Solo se le mueve si corre un peligro mayor."},
+{t:"emergencias",q:"¿Se le debe quitar el casco a un motorista herido?",o:["Sí, inmediatamente","No, salvo que no respire o vomite, y entre dos personas con técnica adecuada","Sí, para que respire mejor"],a:1,e:"Quitar el casco sin técnica puede causar lesiones medulares graves. Solo se retira si es imprescindible."},
+{t:"emergencias",q:"Ante una hemorragia abundante en una extremidad, lo primero es...",o:["Hacer un torniquete siempre","Comprimir directamente sobre la herida","Lavar la herida con alcohol"],a:1,e:"La presión directa sobre la herida es la primera medida. El torniquete es un último recurso."},
+{t:"emergencias",q:"¿Se debe dar de beber a un herido de tráfico?",o:["Sí, agua con azúcar","No, nunca","Solo si lo pide"],a:1,e:"No se debe dar comida ni bebida: puede vomitar o necesitar cirugía urgente."},
+{t:"emergencias",q:"Un herido inconsciente que respira, si no se sospecha lesión de columna, se coloca...",o:["Boca arriba con las piernas en alto","En posición lateral de seguridad","Sentado"],a:1,e:"La posición lateral de seguridad evita que se atragante con la lengua o con un vómito."},
+{t:"emergencias",q:"Si llega a un accidente ya atendido y con ayuda suficiente, lo correcto es...",o:["Detenerse igualmente para mirar","Continuar la marcha sin entorpecer","Hacer fotos para avisar"],a:1,e:"Si la ayuda ya está organizada, detenerse solo entorpece y crea riesgo de nuevos accidentes (efecto mirón)."}
+];
+</script>
+<script>
+/* ================= ESTADO Y PERSISTENCIA ================= */
+const CLAVE = "ruta-carnet-v1";
+const XP_POR_NIVEL = 150;
+const VIDAS_MAX = 5;
+const CIRC = 2 * Math.PI * 31; // circunferencia del anillo de nivel
+
+let S = {
+  xp:0, racha:0, ultimoDia:null, vidas:VIDAS_MAX, diaVidas:null,
+  coronas:{}, stats:{}, examenes:[], todotest:[], lecciones:0
+};
+
+function hoy(){ return new Date().toISOString().slice(0,10); }
+
+/* Adaptador de almacenamiento: usa window.storage dentro de Claude
+   y localStorage cuando la web está hosteada (GitHub Pages, etc.) */
+const almacen = {
+  async get(k){
+    if(typeof window.storage !== "undefined" && window.storage.get){
+      try{ const r = await window.storage.get(k); return r ? r.value : null; }catch(e){ return null; }
+    }
+    try{ return localStorage.getItem(k); }catch(e){ return null; }
+  },
+  async set(k,v){
+    if(typeof window.storage !== "undefined" && window.storage.set){
+      try{ await window.storage.set(k,v); return; }catch(e){}
+    }
+    try{ localStorage.setItem(k,v); }catch(e){ console.error("No se pudo guardar", e); }
+  }
+};
+
+async function cargar(){
+  try{
+    const v = await almacen.get(CLAVE);
+    if(v) S = Object.assign(S, JSON.parse(v));
+  }catch(e){ /* primera vez */ }
+  if(S.diaVidas !== hoy()){ S.vidas = VIDAS_MAX; S.diaVidas = hoy(); }
+  if(S.ultimoDia){
+    const diff = (new Date(hoy()) - new Date(S.ultimoDia)) / 86400000;
+    if(diff > 1) S.racha = 0;
+  }
+  guardar(); pintarTodo();
+}
+async function guardar(){
+  await almacen.set(CLAVE, JSON.stringify(S));
+}
+function marcarActividad(){
+  const h = hoy();
+  if(S.ultimoDia !== h){
+    const diff = S.ultimoDia ? (new Date(h) - new Date(S.ultimoDia)) / 86400000 : null;
+    S.racha = (diff === 1) ? S.racha + 1 : 1;
+    S.ultimoDia = h;
+  }
+}
+
+/* ================= PINTADO ================= */
+const $ = id => document.getElementById(id);
+function pintarEstado(){
+  for(const suf of ["","2","3","4"]){
+    $("rachaN"+suf).textContent = S.racha;
+    $("xpN"+suf).textContent = S.xp;
+    $("vidasN"+suf).textContent = S.vidas;
+  }
+  const nivel = Math.floor(S.xp / XP_POR_NIVEL) + 1;
+  const enNivel = S.xp % XP_POR_NIVEL;
+  $("nivelNum").textContent = nivel;
+  $("anilloValor").style.strokeDashoffset = CIRC * (1 - enNivel / XP_POR_NIVEL);
+  $("nivelTexto").textContent = `${enNivel} / ${XP_POR_NIVEL} XP para el nivel ${nivel+1}`;
+}
+function pintarRuta(){
+  const c = $("carretera"); c.innerHTML = "";
+  TEMAS.forEach((t,i)=>{
+    const cor = S.coronas[t.id]||0;
+    const b = document.createElement("button");
+    b.className = "nodo" + (cor>=3 ? " dominado" : cor>=1 ? " iniciado" : "");
+    b.style.animationDelay = (i*0.05)+"s";
+    b.innerHTML = `<div class="disco">${cor>=3 ? "👑" : t.icono}
+        <div class="coronas">${"★".repeat(cor)}${"☆".repeat(3-cor)}</div>
+      </div>
+      <div class="etiqueta">${t.nombre}<small>${t.sub}</small></div>`;
+    b.onclick = ()=> empezarLeccion(t.id);
+    c.appendChild(b);
+  });
+}
+function pintarExamen(){
+  const ex = S.examenes;
+  $("exTotales").textContent = ex.length;
+  $("exAptos").textContent = ex.filter(e=>e.apto).length;
+  $("exMejor").textContent = ex.length ? Math.min(...ex.map(e=>e.fallos)) + " fallos" : "—";
+  let r=0; for(let i=ex.length-1;i>=0;i--){ if(ex[i].apto) r++; else break; }
+  $("exRachaAptos").textContent = r;
+}
+function pintarPerfil(){
+  const cont = $("statsTemas"); cont.innerHTML = "";
+  TEMAS.forEach(t=>{
+    const st = S.stats[t.id]||{ok:0,total:0};
+    const pct = st.total ? Math.round(st.ok/st.total*100) : 0;
+    const color = st.total===0 ? "var(--card-2)" : pct>=85 ? "var(--verde)" : pct>=60 ? "var(--ambar)" : "var(--rojo)";
+    cont.innerHTML += `<div class="tema-stat">
+      <span style="font-size:16px">${t.icono}</span>
+      <span class="nombre">${t.nombre}</span>
+      <div class="mini-barra"><div style="width:${pct}%;background:${color}"></div></div>
+      <span class="pct">${st.total? pct+"%" : "—"}</span></div>`;
+  });
+  pintarLogros();
+}
+const LOGROS = [
+  {icono:"🔑", nombre:"Contacto",         f:()=>S.lecciones>=1},
+  {icono:"🔥", nombre:"Racha de 3 días",  f:()=>S.racha>=3},
+  {icono:"📅", nombre:"Racha de 7 días",  f:()=>S.racha>=7},
+  {icono:"⚡", nombre:"500 XP",           f:()=>S.xp>=500},
+  {icono:"🚦", nombre:"Primer APTO",      f:()=>S.examenes.some(e=>e.apto)},
+  {icono:"🎯", nombre:"Examen perfecto",  f:()=>S.examenes.some(e=>e.fallos===0)},
+  {icono:"👑", nombre:"Tema dominado",    f:()=>Object.values(S.coronas).some(c=>c>=3)},
+  {icono:"🛣️", nombre:"Toda la ruta",    f:()=>TEMAS.every(t=>(S.coronas[t.id]||0)>=1)},
+  {icono:"📊", nombre:"10 tests TodoTest",f:()=>S.todotest.length>=10}
+];
+function pintarLogros(){
+  $("logros").innerHTML = LOGROS.map(l=>
+    `<div class="logro ${l.f()?"desbloqueado":"bloqueado"}"><div class="icono">${l.icono}</div><div class="nombre">${l.nombre}</div></div>`
+  ).join("");
+}
+function pintarTodo(){ pintarEstado(); pintarRuta(); pintarExamen(); pintarTT(); pintarPerfil(); }
+
+/* ================= PESTAÑAS ================= */
+document.querySelectorAll(".tab").forEach(t=>{
+  t.onclick = ()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("activa"));
+    t.classList.add("activa");
+    mostrar(t.dataset.tab);
+  };
+});
+function mostrar(id){
+  document.querySelectorAll(".pantalla").forEach(p=>p.classList.remove("activa"));
+  $(id).classList.add("activa");
+  $("tabs").style.display = ["p-quiz","p-resultado"].includes(id) ? "none" : "flex";
+  window.scrollTo(0,0);
+}
+
+/* ================= MOTOR DE QUIZ ================= */
+let Q = null;
+function barajar(a){ a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
+
+function empezarLeccion(temaId){
+  if(S.vidas<=0){ alert("Sin corazones ❤️ Se recargan mañana... o haz un simulacro de examen, que no gasta vidas."); return; }
+  const pool = barajar(BANCO.filter(p=>p.t===temaId)).slice(0,8);
+  Q = {tipo:"leccion", temaId, preguntas:pool, i:0, fallos:0, aciertos:0, elegida:null, fase:"eligiendo"};
+  $("quizVidas").classList.remove("oculto"); $("quizTimer").classList.add("oculto");
+  mostrar("p-quiz"); pintarPregunta();
+}
+function empezarExamen(){
+  const pool = barajar(BANCO).slice(0,30);
+  Q = {tipo:"examen", preguntas:pool, i:0, fallos:0, aciertos:0, elegida:null, fase:"eligiendo",
+       fin: Date.now() + 30*60*1000};
+  $("quizVidas").classList.add("oculto"); $("quizTimer").classList.remove("oculto");
+  Q.timer = setInterval(()=>{
+    const ms = Q.fin - Date.now();
+    if(ms<=0){ clearInterval(Q.timer); terminarExamen(); return; }
+    const m = Math.floor(ms/60000), s = Math.floor(ms%60000/1000);
+    $("quizTimer").textContent = `${m}:${String(s).padStart(2,"0")}`;
+  }, 250);
+  mostrar("p-quiz"); pintarPregunta();
+}
+$("btnEmpezarExamen").onclick = empezarExamen;
+
+function pintarPregunta(){
+  const p = Q.preguntas[Q.i];
+  const tema = TEMAS.find(t=>t.id===p.t);
+  $("quizTema").textContent = (Q.tipo==="examen" ? `${Q.i+1} / 30 · ` : "") + tema.nombre;
+  $("quizPregunta").textContent = p.q;
+  $("quizBarra").style.width = (Q.i / Q.preguntas.length * 100) + "%";
+  $("quizVidas").textContent = "❤️ " + S.vidas;
+  const cont = $("quizOpciones"); cont.innerHTML = "";
+  p.o.forEach((op,idx)=>{
+    const b = document.createElement("button");
+    b.className = "opcion"; b.textContent = op;
+    b.onclick = ()=>{
+      if(Q.fase!=="eligiendo") return;
+      Q.elegida = idx;
+      cont.querySelectorAll(".opcion").forEach(x=>x.classList.remove("elegida"));
+      b.classList.add("elegida");
+      $("quizBoton").disabled = false;
+    };
+    cont.appendChild(b);
+  });
+  Q.fase="eligiendo"; Q.elegida=null;
+  $("quizBoton").disabled = true; $("quizBoton").textContent = "Comprobar";
+  $("quizBoton").className = "btn btn-primario";
+  $("quizFeedback").className = "feedback";
+}
+
+$("quizBoton").onclick = ()=>{ Q.fase==="eligiendo" ? comprobar() : avanzar(); };
+
+function comprobar(){
+  const p = Q.preguntas[Q.i];
+  const ok = Q.elegida === p.a;
+  Q.fase = "feedback";
+  const st = S.stats[p.t] || (S.stats[p.t]={ok:0,total:0});
+  st.total++; if(ok) st.ok++;
+  $("quizOpciones").querySelectorAll(".opcion").forEach((b,idx)=>{
+    b.disabled = true;
+    if(idx===p.a) b.classList.add("correcta");
+    else if(idx===Q.elegida && !ok) b.classList.add("incorrecta");
+  });
+  const f = $("quizFeedback");
+  if(ok){
+    Q.aciertos++;
+    f.className = "feedback ok";
+    f.querySelector("b").textContent = ["¡Bien!","¡Correcto!","¡Eso es!","¡Genial!"][Math.floor(Math.random()*4)];
+  }else{
+    Q.fallos++;
+    if(Q.tipo==="leccion") S.vidas = Math.max(0, S.vidas-1);
+    f.className = "feedback mal";
+    f.querySelector("b").textContent = "Correcta: " + p.o[p.a];
+  }
+  f.querySelector("span").textContent = p.e;
+  pintarEstado(); guardar();
+  $("quizBoton").textContent = "Continuar";
+  $("quizBoton").className = ok ? "btn btn-verde" : "btn btn-rojo";
+  $("quizVidas").textContent = "❤️ " + S.vidas;
+}
+function avanzar(){
+  if(Q.tipo==="leccion" && S.vidas<=0){ terminarLeccion(true); return; }
+  Q.i++;
+  if(Q.i >= Q.preguntas.length){
+    Q.tipo==="leccion" ? terminarLeccion(false) : terminarExamen();
+  } else pintarPregunta();
+}
+$("quizCerrar").onclick = ()=>{
+  if(confirm("¿Abandonar? Perderás el progreso de esta sesión.")){
+    if(Q && Q.timer) clearInterval(Q.timer);
+    Q=null; volverInicio();
+  }
+};
+function volverInicio(){
+  mostrar("p-ruta");
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("activa"));
+  document.querySelector('[data-tab="p-ruta"]').classList.add("activa");
+  pintarTodo();
+}
+
+/* ================= FIN DE LECCIÓN ================= */
+function terminarLeccion(sinVidas){
+  const total = Q.aciertos + Q.fallos;
+  let xp = 0, res = $("resRecompensas");
+  if(sinVidas){
+    $("resEmoji").textContent = "💔";
+    $("resTitulo").textContent = "Sin corazones";
+    $("resTexto").textContent = "Se acabaron las vidas por hoy. Mañana se recargan, y el simulacro de examen no las gasta.";
+    res.innerHTML = "";
+  }else{
+    xp = Q.aciertos*10 + (Q.fallos===0 ? 20 : 0);
+    S.xp += xp; S.lecciones++;
+    marcarActividad();
+    const c = S.coronas[Q.temaId]||0;
+    if(Q.fallos<=1 && c<3) S.coronas[Q.temaId] = c+1;
+    const pct = Math.round(Q.aciertos/total*100);
+    $("resEmoji").textContent = Q.fallos===0 ? "🌟" : "🎉";
+    $("resTitulo").textContent = Q.fallos===0 ? "¡Lección perfecta!" : "¡Lección completada!";
+    $("resTexto").textContent = Q.fallos<=1
+      ? "Has ganado una estrella en este tema. Tres estrellas = tema dominado 👑"
+      : "Completada, pero con más de un fallo no se gana estrella. Repítela para dominarla.";
+    res.innerHTML = `
+      <div class="recompensa oro"><div class="valor">+${xp}</div><div class="nombre">XP</div></div>
+      <div class="recompensa verde"><div class="valor">${pct}%</div><div class="nombre">Precisión</div></div>
+      <div class="recompensa rojo"><div class="valor">${Q.fallos}</div><div class="nombre">Fallos</div></div>`;
+    if(Q.fallos===0) confeti();
+  }
+  guardar(); mostrar("p-resultado");
+}
+
+/* ================= FIN DE EXAMEN ================= */
+function terminarExamen(){
+  if(Q.timer) clearInterval(Q.timer);
+  const apto = Q.fallos <= 3;
+  const xp = apto ? 100 + Q.aciertos*2 : Q.aciertos*2;
+  S.xp += xp;
+  marcarActividad();
+  S.examenes.push({fecha:hoy(), fallos:Q.fallos, apto});
+  $("resEmoji").textContent = apto ? "🪪" : "😤";
+  $("resTitulo").textContent = apto ? "¡APTO!" : "No apto";
+  $("resTexto").textContent = apto
+    ? `${Q.fallos} fallo${Q.fallos===1?"":"s"} de 30. En el examen real esto sería un aprobado. ¡Así se hace!`
+    : `${Q.fallos} fallos de 30 (máximo permitido: 3). Mira en tu perfil qué temas cojean y dales caña.`;
+  $("resRecompensas").innerHTML = `
+    <div class="recompensa oro"><div class="valor">+${xp}</div><div class="nombre">XP</div></div>
+    <div class="recompensa verde"><div class="valor">${Q.aciertos}</div><div class="nombre">Aciertos</div></div>
+    <div class="recompensa rojo"><div class="valor">${Q.fallos}</div><div class="nombre">Fallos</div></div>`;
+  if(apto) confeti();
+  guardar(); mostrar("p-resultado");
+}
+$("resContinuar").onclick = volverInicio;
+
+/* ================= TODOTEST ================= */
+$("btnGuardarTT").onclick = ()=>{
+  const v = parseInt($("ttFallos").value,10);
+  if(isNaN(v) || v<0 || v>30){ alert("Introduce los fallos: un número entre 0 y 30."); return; }
+  S.todotest.push({fecha:hoy(), fallos:v});
+  S.xp += 15;
+  marcarActividad();
+  $("ttFallos").value = "";
+  guardar(); pintarEstado(); pintarTT(); pintarPerfil();
+};
+function pintarTT(){
+  const d = S.todotest;
+  const lista = $("ttLista");
+  if(!d.length){
+    $("ttResumen").textContent = "Aún no hay tests registrados.";
+    lista.innerHTML = '<p style="font-size:13px;color:var(--texto-3)">Nada por aquí todavía.</p>';
+    dibujarGrafica([]); return;
+  }
+  const ult10 = d.slice(-10);
+  const aptos = ult10.filter(x=>x.fallos<=3).length;
+  const media = (ult10.reduce((s,x)=>s+x.fallos,0)/ult10.length).toFixed(1);
+  $("ttResumen").textContent = `Últimos ${ult10.length} tests: ${aptos} aptos (${Math.round(aptos/ult10.length*100)}%) · media ${media} fallos. ${aptos/ult10.length>=0.9 ? "Estás para presentarte 💪" : "Objetivo: encadenar ~90% de aptos antes de presentarte."}`;
+  lista.innerHTML = d.slice(-8).reverse().map((x)=>{
+    const idxReal = d.lastIndexOf(x);
+    return `<div class="registro-fila">
+      <span>${x.fecha.split("-").reverse().join("/")}</span>
+      <span><span class="pastilla ${x.fallos<=3?"apto":"noapto"}">${x.fallos} fallos · ${x.fallos<=3?"APTO":"NO APTO"}</span>
+      <button class="borrar-reg" onclick="borrarTT(${idxReal})">✕</button></span>
+    </div>`;
+  }).join("");
+  dibujarGrafica(d.slice(-15));
+}
+function borrarTT(i){ S.todotest.splice(i,1); guardar(); pintarTT(); }
+
+function dibujarGrafica(datos){
+  const cv = $("graficaTT"), ctx = cv.getContext("2d");
+  const W = cv.width, H = cv.height, PAD = 46;
+  ctx.clearRect(0,0,W,H);
+  const maxY = 12;
+  const py = f => H-PAD - (Math.min(f,maxY)/maxY)*(H-2*PAD);
+  // Zona apto (≤3 fallos)
+  const y3 = py(3);
+  const gz = ctx.createLinearGradient(0,y3,0,H-PAD);
+  gz.addColorStop(0,"rgba(52,211,153,.16)"); gz.addColorStop(1,"rgba(52,211,153,.02)");
+  ctx.fillStyle = gz; ctx.fillRect(PAD, y3, W-2*PAD, (H-PAD)-y3);
+  ctx.strokeStyle = "rgba(52,211,153,.55)"; ctx.setLineDash([8,7]); ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(PAD,y3); ctx.lineTo(W-PAD,y3); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle = "#34D399"; ctx.font = "700 19px -apple-system,sans-serif";
+  ctx.fillText("Zona APTO (≤3)", PAD+8, y3-10);
+  // Rejilla y eje
+  ctx.fillStyle = "#5A6478"; ctx.font = "600 17px -apple-system,sans-serif";
+  [0,3,6,9,12].forEach(v=>{
+    const y = py(v);
+    ctx.fillText(v, PAD-32, y+6);
+    ctx.strokeStyle = "rgba(255,255,255,.05)"; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(PAD,y); ctx.lineTo(W-PAD,y); ctx.stroke();
+  });
+  if(!datos.length){
+    ctx.fillStyle="#5A6478"; ctx.font="600 21px -apple-system,sans-serif";
+    ctx.textAlign="center"; ctx.fillText("Registra tests para ver tu curva", W/2, H/2); ctx.textAlign="left";
+    return;
+  }
+  const paso = datos.length>1 ? (W-2*PAD)/(datos.length-1) : 0;
+  const px = i => datos.length>1 ? PAD+i*paso : W/2;
+  // Relleno bajo la curva
+  const gl = ctx.createLinearGradient(0,PAD,0,H-PAD);
+  gl.addColorStop(0,"rgba(34,211,238,.22)"); gl.addColorStop(1,"rgba(34,211,238,0)");
+  ctx.beginPath();
+  datos.forEach((p,i)=> i? ctx.lineTo(px(i),py(p.fallos)) : ctx.moveTo(px(0),py(p.fallos)));
+  ctx.lineTo(px(datos.length-1),H-PAD); ctx.lineTo(px(0),H-PAD); ctx.closePath();
+  ctx.fillStyle = gl; ctx.fill();
+  // Línea
+  const gs = ctx.createLinearGradient(PAD,0,W-PAD,0);
+  gs.addColorStop(0,"#22D3EE"); gs.addColorStop(1,"#3B82F6");
+  ctx.strokeStyle = gs; ctx.lineWidth = 4.5; ctx.lineJoin="round"; ctx.lineCap="round";
+  ctx.beginPath();
+  datos.forEach((p,i)=> i? ctx.lineTo(px(i),py(p.fallos)) : ctx.moveTo(px(0),py(p.fallos)));
+  ctx.stroke();
+  // Puntos
+  datos.forEach((p,i)=>{
+    ctx.beginPath(); ctx.arc(px(i), py(p.fallos), 7.5, 0, Math.PI*2);
+    ctx.fillStyle = p.fallos<=3 ? "#34D399" : "#F87171";
+    ctx.fill(); ctx.strokeStyle="#0B0E15"; ctx.lineWidth=3.5; ctx.stroke();
+  });
+}
+
+/* ================= EXTRAS ================= */
+function confeti(){
+  const c = document.createElement("div"); c.className = "confeti";
+  const em = ["🎉","⭐","🚗","🪪","✨","🔰"];
+  for(let i=0;i<26;i++){
+    const s = document.createElement("span");
+    s.textContent = em[Math.floor(Math.random()*em.length)];
+    s.style.left = Math.random()*100+"%";
+    s.style.animationDelay = Math.random()*0.8+"s";
+    s.style.fontSize = (16+Math.random()*16)+"px";
+    c.appendChild(s);
+  }
+  document.body.appendChild(c);
+  setTimeout(()=>c.remove(), 3600);
+}
+$("btnExportar").onclick = ()=>{
+  const blob = new Blob([JSON.stringify(S,null,2)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "ruta-al-carnet-" + hoy() + ".json";
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
+$("btnImportar").onclick = ()=> $("ficheroImportar").click();
+$("ficheroImportar").onchange = e=>{
+  const f = e.target.files[0]; if(!f) return;
+  const lector = new FileReader();
+  lector.onload = async ()=>{
+    try{
+      const datos = JSON.parse(lector.result);
+      if(typeof datos.xp !== "number" || !Array.isArray(datos.todotest)) throw 0;
+      S = Object.assign(S, datos);
+      await guardar(); pintarTodo();
+      alert("Progreso restaurado ✅");
+    }catch(err){ alert("Ese archivo no parece una copia válida de Ruta al Carnet."); }
+  };
+  lector.readAsText(f);
+  e.target.value = "";
+};
+$("btnReiniciar").onclick = async ()=>{
+  if(!confirm("Esto borra XP, rachas, estrellas y el diario de TodoTest. ¿Seguro?")) return;
+  S = {xp:0,racha:0,ultimoDia:null,vidas:VIDAS_MAX,diaVidas:hoy(),coronas:{},stats:{},examenes:[],todotest:[],lecciones:0};
+  await almacen.set(CLAVE, JSON.stringify(S));
+  pintarTodo();
+};
+
+cargar();
+</script>
 </body>
 </html>
